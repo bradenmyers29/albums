@@ -1,0 +1,73 @@
+---
+title: "Comparing Albums: Lil Tony Official, Pradabagshawty, and Glokk40Spaz"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+```
+
+## Underground Atlanta Soundscapes
+
+Comparing project lengths and track counts across prominent releases from **Lil Tony Official**, **Pradabagshawty**, and **Glokk40Spaz**.
+
+```{r}
+#| label: album-data
+albums <- tibble(
+  artist = c(
+    rep("Lil Tony Official", 4),
+    rep("Pradabagshawty", 4),
+    rep("Glokk40Spaz", 4)
+  ),
+  album = c(
+    "TKEY (2023)", "2 Sides 2 Every Story (2023)", "14 Steps to Success (2024)", "Born Again (2025)",
+    "Bloxk Addiktion (2023)", "Forever and After (2024)", "Home Invasions (2025)", "Red Flags & Roses (2025)",
+    "Baby Whoa (2022)", "Don't Get Took Off 3 (2022)", "Took The Biggest Risk (2023)", "Da Real Oso (2024)"
+  ),
+  tracks = c(
+    15, 20, 14, 16,
+    12, 14, 13, 15,
+    9, 14, 14, 18
+  ),
+  runtime = c(
+    32, 51, 33, 41,
+    26, 31, 28, 34,
+    22, 34, 31, 44
+  )
+) |>
+  mutate(avg_track_len = round(runtime / tracks, 2))
+```
+
+```{r}
+#| label: album-plot
+#| fig-width: 9
+#| fig-height: 6
+ggplot(albums, aes(x = tracks, y = runtime, color = artist)) +
+  geom_point(aes(size = avg_track_len), alpha = 0.85) +
+  geom_text(aes(label = album), vjust = -1, size = 3.2, check_overlap = TRUE, show.legend = FALSE) +
+  scale_color_manual(values = c(
+    "Lil Tony Official" = "#E63946",
+    "Pradabagshawty" = "#457B9D",
+    "Glokk40Spaz" = "#2A9D8F"
+  )) +
+  scale_size_continuous(range = c(4, 9), name = "Avg Track (min)") +
+  labs(
+    title = "Album Scope & Density Comparison",
+    subtitle = "Comparing track counts, total runtimes, and average song duration",
+    x = "Number of Tracks",
+    y = "Total Runtime (minutes)",
+    color = "Artist",
+    caption = "Data compiled from streaming releases"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(color = "gray30", margin = margin(b = 15)),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom"
+  )
+```
