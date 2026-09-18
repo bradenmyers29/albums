@@ -2,9 +2,9 @@
   {
     "objectID": "albums.html",
     "href": "albums.html",
-    "title": "Comparing Albums: Lil Tony Official, Pradabagshawty, and Glokk40Spaz",
+    "title": "Underground Atlanta Discography Explorer",
     "section": "",
-    "text": "Comparing project lengths and track counts across prominent releases from Lil Tony Official, Pradabagshawty, and Glokk40Spaz."
+    "text": "Browse full tracklists, album runtimes, and artwork.\n\n\n\n\n&lt;label for=\"artist-select\"&gt;Artist&lt;/label&gt;\n&lt;select id=\"artist-select\" class=\"control-select\"&gt;&lt;/select&gt;\n\n\n&lt;label for=\"album-select\"&gt;Album&lt;/label&gt;\n&lt;select id=\"album-select\" class=\"control-select\"&gt;&lt;/select&gt;\n\n\n\n\n&lt;img id=\"album-cover-img\" class=\"album-cover\" src=\"\" alt=\"Album Artwork\"&gt;\n&lt;div class=\"album-meta\"&gt;\n  &lt;h3 id=\"album-title-text\" class=\"album-title-text\"&gt;&lt;/h3&gt;\n  &lt;p id=\"album-artist-text\" class=\"album-artist-text\"&gt;&lt;/p&gt;\n  &lt;div class=\"badge-row\"&gt;\n    &lt;span id=\"badge-year\" class=\"meta-badge\"&gt;&lt;/span&gt;\n    &lt;span id=\"badge-tracks\" class=\"meta-badge\"&gt;&lt;/span&gt;\n  &lt;/div&gt;\n&lt;/div&gt;\n\n\n&lt;div class=\"tracklist-container\"&gt;\n  &lt;div id=\"track-list\" class=\"track-list\"&gt;&lt;/div&gt;\n&lt;/div&gt;"
   },
   {
     "objectID": "albums.html#underground-atlanta-soundscapes",
@@ -12,5 +12,12 @@
     "title": "Comparing Albums: Lil Tony Official, Pradabagshawty, and Glokk40Spaz",
     "section": "",
     "text": "Comparing project lengths and track counts across prominent releases from Lil Tony Official, Pradabagshawty, and Glokk40Spaz."
+  },
+  {
+    "objectID": "albums.html#project-comparison-overview",
+    "href": "albums.html#project-comparison-overview",
+    "title": "Underground Atlanta Discography Explorer",
+    "section": "Project Comparison Overview",
+    "text": "Project Comparison Overview"
   }
 ]
