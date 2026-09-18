@@ -1,279 +1,50 @@
 ---
-title: "Underground Atlanta Discography Explorer"
+title: "Atlanta Underground Discography"
 format:
   html:
     embed-resources: true
-execute:
-  echo: false
-  warning: false
-  message: false
 ---
 
-```{r}
-#| label: setup
-library(tidyverse)
-```
-
-::: {.music-explorer}
-
-<style>
-.music-explorer {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  max-width: 950px;
-  margin: 2rem auto;
-  background: #111827;
-  color: #f3f4f6;
-  border-radius: 18px;
-  padding: 2rem;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
-}
-
-.explorer-header {
-  border-bottom: 1px solid #374151;
-  padding-bottom: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-.explorer-header h2 {
-  margin: 0 0 0.5rem 0;
-  font-weight: 800;
-  color: #f9fafb;
-  font-size: 1.75rem;
-}
-
-.explorer-header p {
-  margin: 0;
-  color: #9ca3af;
-  font-size: 0.95rem;
-}
-
-.controls-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-}
-
-.control-group label {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #9ca3af;
-  margin-bottom: 0.4rem;
-}
-
-.control-select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: #1f2937;
-  color: #f3f4f6;
-  border: 1px solid #4b5563;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.control-select:focus {
-  border-color: #ec4899;
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
-}
-
-.album-display {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2rem;
-  background: #1f2937;
-  border-radius: 14px;
-  padding: 1.75rem;
-  border: 1px solid #374151;
-}
-
-@media (max-width: 768px) {
-  .album-display {
-    grid-template-columns: 1fr;
-  }
-}
-
-.album-sidebar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.album-cover {
-  width: 100%;
-  max-width: 290px;
-  aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  object-fit: cover;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.album-cover:hover {
-  transform: scale(1.02);
-}
-
-.album-meta {
-  margin-top: 1.25rem;
-  width: 100%;
-}
-
-.album-title-text {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #f9fafb;
-  margin: 0 0 0.35rem 0;
-}
-
-.album-artist-text {
-  font-size: 1.05rem;
-  color: #ec4899;
-  font-weight: 600;
-  margin: 0 0 0.75rem 0;
-}
-
-.badge-row {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.meta-badge {
-  background: #374151;
-  color: #e5e7eb;
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.78rem;
-  font-weight: 600;
-}
-
-.tracklist-container {
-  max-height: 480px;
-  overflow-y: auto;
-  padding-right: 0.5rem;
-}
-
-.tracklist-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.tracklist-container::-webkit-scrollbar-thumb {
-  background: #4b5563;
-  border-radius: 4px;
-}
-
-.tracklist-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.track-row {
-  display: flex;
-  align-items: center;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  transition: background 0.15s ease;
-  border-bottom: 1px solid rgba(75, 85, 99, 0.3);
-}
-
-.track-row:hover {
-  background: #374151;
-}
-
-.track-num {
-  width: 32px;
-  color: #9ca3af;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.track-info {
-  flex-grow: 1;
-  padding-right: 1rem;
-}
-
-.track-title {
-  color: #f3f4f6;
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-.track-duration {
-  color: #9ca3af;
-  font-size: 0.85rem;
-  font-variant-numeric: tabular-nums;
-  margin-right: 0.75rem;
-}
-
-.play-btn {
-  background: #ec4899;
-  border: none;
-  color: white;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
-  transition: transform 0.15s ease, background 0.15s ease;
-}
-
-.play-btn:hover {
-  background: #db2777;
-  transform: scale(1.1);
-}
-</style>
-
-<div class="explorer-header">
-  <h2>Select Artist & Album</h2>
-  <p>Browse full tracklists, album runtimes, and artwork.</p>
-</div>
-
-<div class="controls-row">
-  <div class="control-group">
-    <label for="artist-select">Artist</label>
-    <select id="artist-select" class="control-select"></select>
+```{=html}
+<div style="max-width: 800px; margin: 30px auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
+  
+  <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 28px;">
+    <div style="flex: 1; min-width: 220px;">
+      <label for="artistSelect" style="display: block; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #4b5563; margin-bottom: 8px;">Select Artist</label>
+      <select id="artistSelect" style="width: 100%; padding: 12px 16px; font-size: 1rem; border-radius: 10px; border: 2px solid #d1d5db; background-color: #f9fafb; font-weight: 600; color: #111827; cursor: pointer; outline: none;">
+      </select>
+    </div>
+    <div style="flex: 1; min-width: 220px;">
+      <label for="albumSelect" style="display: block; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #4b5563; margin-bottom: 8px;">Select Album</label>
+      <select id="albumSelect" style="width: 100%; padding: 12px 16px; font-size: 1rem; border-radius: 10px; border: 2px solid #d1d5db; background-color: #f9fafb; font-weight: 600; color: #111827; cursor: pointer; outline: none;">
+      </select>
+    </div>
   </div>
-  <div class="control-group">
-    <label for="album-select">Album</label>
-    <select id="album-select" class="control-select"></select>
-  </div>
-</div>
 
-<div class="album-display">
-  <div class="album-sidebar">
-    <img id="album-cover-img" class="album-cover" src="" alt="Album Artwork">
-    <div class="album-meta">
-      <h3 id="album-title-text" class="album-title-text"></h3>
-      <p id="album-artist-text" class="album-artist-text"></p>
-      <div class="badge-row">
-        <span id="badge-year" class="meta-badge"></span>
-        <span id="badge-tracks" class="meta-badge"></span>
+  <div id="albumDetails" style="text-align: center;">
+    <div style="margin-bottom: 24px;">
+      <img id="coverArt" alt="Album Cover" style="width: 320px; height: 320px; border-radius: 16px; object-fit: cover; box-shadow: 0 12px 28px rgba(0,0,0,0.2); border: 1px solid #e5e7eb; display: inline-block;">
+    </div>
+    
+    <div style="margin-bottom: 28px;">
+      <h2 id="albumTitle" style="margin: 0 0 6px 0; font-size: 1.8rem; font-weight: 800; color: #111827;"></h2>
+      <p id="artistName" style="margin: 0 0 12px 0; font-size: 1.15rem; color: #6366f1; font-weight: 600;"></p>
+      <div style="display: inline-flex; gap: 10px;">
+        <span id="releaseYear" style="background: #f3f4f6; color: #374151; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;"></span>
+        <span id="trackCount" style="background: #f3f4f6; color: #374151; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;"></span>
       </div>
     </div>
-  </div>
-  <div class="album-content">
-    <div class="tracklist-container">
-      <div id="track-list" class="track-list"></div>
+
+    <div style="text-align: left; max-width: 650px; margin: 0 auto; background: #f9fafb; border-radius: 12px; padding: 16px 20px; border: 1px solid #e5e7eb;">
+      <h3 style="margin: 0 0 14px 0; font-size: 1.1rem; font-weight: 700; color: #374151; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">Tracklist</h3>
+      <div id="trackList" style="display: flex; flex-direction: column; gap: 6px;"></div>
     </div>
   </div>
+
 </div>
 
-<audio id="audio-player"></audio>
-
 <script>
-const discography = {
+const data = {
   "Lil Tony Official": [
     {
       "title": "2 Sides 2 Every Story",
@@ -1128,154 +899,84 @@ const discography = {
   ]
 };
 
-const artistSelect = document.getElementById("artist-select");
-const albumSelect = document.getElementById("album-select");
-const coverImg = document.getElementById("album-cover-img");
-const titleText = document.getElementById("album-title-text");
-const artistText = document.getElementById("album-artist-text");
-const badgeYear = document.getElementById("badge-year");
-const badgeTracks = document.getElementById("badge-tracks");
-const trackList = document.getElementById("track-list");
-const audioPlayer = document.getElementById("audio-player");
-
-let currentAudioUrl = null;
+const artistSelect = document.getElementById("artistSelect");
+const albumSelect = document.getElementById("albumSelect");
+const coverArt = document.getElementById("coverArt");
+const albumTitle = document.getElementById("albumTitle");
+const artistName = document.getElementById("artistName");
+const releaseYear = document.getElementById("releaseYear");
+const trackCount = document.getElementById("trackCount");
+const trackList = document.getElementById("trackList");
 
 // Populate artists
-const artists = Object.keys(discography);
-artists.forEach((artist) => {
+Object.keys(data).forEach(artist => {
   const opt = document.createElement("option");
   opt.value = artist;
   opt.textContent = artist;
   artistSelect.appendChild(opt);
 });
 
-function updateAlbums() {
-  const selectedArtist = artistSelect.value;
-  const albums = discography[selectedArtist] || [];
+function loadAlbums() {
+  const artist = artistSelect.value;
+  const albums = data[artist] || [];
   albumSelect.innerHTML = "";
   
   albums.forEach((album, idx) => {
     const opt = document.createElement("option");
     opt.value = idx;
-    opt.textContent = `${album.title} (${album.releaseYear})`;
+    opt.textContent = album.title + " (" + album.releaseYear + ")";
     albumSelect.appendChild(opt);
   });
   
-  displayAlbum();
+  loadAlbumDetails();
 }
 
-function displayAlbum() {
-  const selectedArtist = artistSelect.value;
+function loadAlbumDetails() {
+  const artist = artistSelect.value;
   const albumIdx = parseInt(albumSelect.value) || 0;
-  const album = discography[selectedArtist][albumIdx];
-  
+  const album = data[artist][albumIdx];
   if (!album) return;
-  
-  coverImg.src = album.artwork;
-  titleText.textContent = album.title;
-  artistText.textContent = selectedArtist;
-  badgeYear.textContent = `Year: ${album.releaseYear}`;
-  badgeTracks.textContent = `${album.tracksCount} Tracks`;
-  
-  // Render tracks
+
+  coverArt.src = album.artwork;
+  albumTitle.textContent = album.title;
+  artistName.textContent = artist;
+  releaseYear.textContent = "Released: " + album.releaseYear;
+  trackCount.textContent = album.tracksCount + " Tracks";
+
   trackList.innerHTML = "";
-  album.tracks.forEach((t) => {
+  album.tracks.forEach(track => {
     const row = document.createElement("div");
-    row.className = "track-row";
-    
-    const num = document.createElement("div");
-    num.className = "track-num";
-    num.textContent = t.number;
-    
-    const info = document.createElement("div");
-    info.className = "track-info";
-    const name = document.createElement("div");
-    name.className = "track-title";
-    name.textContent = t.title;
-    info.appendChild(name);
-    
-    const dur = document.createElement("div");
-    dur.className = "track-duration";
-    dur.textContent = t.duration;
-    
-    row.appendChild(num);
-    row.appendChild(info);
+    row.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 6px; transition: background 0.15s; font-size: 0.95rem; border-bottom: 1px solid #edf2f7;";
+    row.onmouseover = () => row.style.backgroundColor = "#e5e7eb";
+    row.onmouseout = () => row.style.backgroundColor = "transparent";
+
+    const left = document.createElement("div");
+    left.style.cssText = "display: flex; align-items: center; gap: 12px; overflow: hidden;";
+
+    const num = document.createElement("span");
+    num.style.cssText = "font-weight: 700; color: #9ca3af; width: 24px; text-align: right; flex-shrink: 0;";
+    num.textContent = track.number;
+
+    const title = document.createElement("span");
+    title.style.cssText = "font-weight: 600; color: #1f2937; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;";
+    title.textContent = track.title;
+
+    left.appendChild(num);
+    left.appendChild(title);
+
+    const dur = document.createElement("span");
+    dur.style.cssText = "color: #6b7280; font-family: monospace; font-size: 0.9rem; flex-shrink: 0; margin-left: 16px;";
+    dur.textContent = track.duration;
+
+    row.appendChild(left);
     row.appendChild(dur);
-    
-    if (t.preview) {
-      const btn = document.createElement("button");
-      btn.className = "play-btn";
-      btn.innerHTML = "&#9658;";
-      btn.title = "Play preview";
-      btn.onclick = () => {
-        if (currentAudioUrl === t.preview && !audioPlayer.paused) {
-          audioPlayer.pause();
-          btn.innerHTML = "&#9658;";
-        } else {
-          audioPlayer.src = t.preview;
-          audioPlayer.play();
-          currentAudioUrl = t.preview;
-          document.querySelectorAll(".play-btn").forEach(b => b.innerHTML = "&#9658;");
-          btn.innerHTML = "&#10074;&#10074;";
-        }
-      };
-      row.appendChild(btn);
-    }
-    
     trackList.appendChild(row);
   });
 }
 
-artistSelect.addEventListener("change", updateAlbums);
-albumSelect.addEventListener("change", displayAlbum);
+artistSelect.addEventListener("change", loadAlbums);
+albumSelect.addEventListener("change", loadAlbumDetails);
 
-// Initial call
-updateAlbums();
+loadAlbums();
 </script>
-
-:::
-
-## Project Comparison Overview
-
-```{r}
-#| label: comparison-plot
-#| fig-width: 9
-#| fig-height: 5.5
-
-albums_summary <- tibble(
-  artist = c(
-    rep("Lil Tony Official", 3),
-    rep("Pradabagshawty", 3),
-    rep("Glokk40Spaz", 3)
-  ),
-  album = c(
-    "2 Sides 2 Every Story", "TKEY", "Tkey vs. Tony",
-    "Home Invasions", "Forever and After", "B What You B",
-    "Took The Biggest Risk", "Baby Whoa", "Da Real Oso"
-  ),
-  tracks = c(20, 15, 14, 13, 14, 15, 17, 9, 18),
-  runtime = c(51, 32, 33, 28, 31, 32, 40, 22, 44)
-)
-
-ggplot(albums_summary, aes(x = tracks, y = runtime, color = artist)) +
-  geom_point(size = 5, alpha = 0.85) +
-  geom_text(aes(label = album), vjust = -1, size = 3.2, check_overlap = TRUE, show.legend = FALSE) +
-  scale_color_manual(values = c(
-    "Lil Tony Official" = "#ec4899",
-    "Pradabagshawty" = "#3b82f6",
-    "Glokk40Spaz" = "#10b981"
-  )) +
-  labs(
-    title = "Album Scope Comparison: Tracks vs. Runtime",
-    subtitle = "Comparing overall volume across Atlanta underground projects",
-    x = "Total Tracks",
-    y = "Total Runtime (minutes)",
-    color = "Artist"
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    plot.title = element_text(face = "bold", size = 15),
-    plot.subtitle = element_text(color = "gray40", margin = margin(b = 12)),
-    legend.position = "bottom"
-  )
 ```
