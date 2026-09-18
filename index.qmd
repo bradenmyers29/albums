@@ -6,7 +6,7 @@ format:
 ---
 
 ```{=html}
-<div style="max-width: 800px; margin: 30px auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
+<div style="max-width: 820px; margin: 30px auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
   
   <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 28px;">
     <div style="flex: 1; min-width: 220px;">
@@ -26,7 +26,7 @@ format:
       <img id="coverArt" alt="Album Cover" style="width: 320px; height: 320px; border-radius: 16px; object-fit: cover; box-shadow: 0 12px 28px rgba(0,0,0,0.2); border: 1px solid #e5e7eb; display: inline-block;">
     </div>
     
-    <div style="margin-bottom: 28px;">
+    <div style="margin-bottom: 24px;">
       <h2 id="albumTitle" style="margin: 0 0 6px 0; font-size: 1.8rem; font-weight: 800; color: #111827;"></h2>
       <p id="artistName" style="margin: 0 0 12px 0; font-size: 1.15rem; color: #6366f1; font-weight: 600;"></p>
       <div style="display: inline-flex; gap: 10px;">
@@ -35,13 +35,24 @@ format:
       </div>
     </div>
 
+    <!-- Mini player status banner -->
+    <div id="playerBanner" style="display: none; align-items: center; justify-content: space-between; background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; padding: 10px 18px; border-radius: 10px; margin: 0 auto 18px auto; max-width: 650px; font-size: 0.92rem; font-weight: 600;">
+      <span id="playerStatus">Now Playing: ...</span>
+      <button id="bannerStopBtn" style="background: #7c3aed; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">Stop</button>
+    </div>
+
     <div style="text-align: left; max-width: 650px; margin: 0 auto; background: #f9fafb; border-radius: 12px; padding: 16px 20px; border: 1px solid #e5e7eb;">
-      <h3 style="margin: 0 0 14px 0; font-size: 1.1rem; font-weight: 700; color: #374151; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">Tracklist</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 12px;">
+        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #374151;">Tracklist</h3>
+        <span style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">▶ Audio clip available on top 3 tracks</span>
+      </div>
       <div id="trackList" style="display: flex; flex-direction: column; gap: 6px;"></div>
     </div>
   </div>
 
 </div>
+
+<audio id="globalAudio"></audio>
 
 <script>
 const data = {
@@ -56,121 +67,141 @@ const data = {
           "number": 1,
           "title": "Celsius",
           "duration": "2:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/af/bb/d1/afbbd1a4-d5bc-388d-8d02-2943e2ae6389/mzaf_15923276752370340259.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/af/bb/d1/afbbd1a4-d5bc-388d-8d02-2943e2ae6389/mzaf_15923276752370340259.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Innie Minnie Minie Moe",
           "duration": "2:21",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/04/ff/43/04ff4356-a7ea-6e43-f581-1ea9f8bc9254/mzaf_16135019269931318998.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/04/ff/43/04ff4356-a7ea-6e43-f581-1ea9f8bc9254/mzaf_16135019269931318998.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 3,
           "title": "Times Tables",
           "duration": "2:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4e/7a/6f/4e7a6fde-7957-451a-453b-1394da552273/mzaf_6565033259942930490.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4e/7a/6f/4e7a6fde-7957-451a-453b-1394da552273/mzaf_6565033259942930490.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 4,
           "title": "Les Duski",
           "duration": "2:27",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/82/42/68/824268fa-f981-6f97-9d1f-e288195a4c80/mzaf_7369961415239454886.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/82/42/68/824268fa-f981-6f97-9d1f-e288195a4c80/mzaf_7369961415239454886.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Bar4Bar",
           "duration": "3:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/42/d9/80/42d9805a-f768-547e-349d-4cfdba4cc09c/mzaf_9251673209958983982.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/42/d9/80/42d9805a-f768-547e-349d-4cfdba4cc09c/mzaf_9251673209958983982.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Genny Gen Gen",
           "duration": "1:42",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c3/6e/81/c36e8110-d2ac-9833-5176-be6000cc085b/mzaf_8269187087036908126.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c3/6e/81/c36e8110-d2ac-9833-5176-be6000cc085b/mzaf_8269187087036908126.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Gun Smoke",
           "duration": "2:29",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/29/8d/23298dce-5ad7-037a-a130-96e8a534d53f/mzaf_6459687650963997610.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/29/8d/23298dce-5ad7-037a-a130-96e8a534d53f/mzaf_6459687650963997610.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 8,
           "title": "Fuego",
           "duration": "2:03",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f8/31/37/f8313788-8142-14ae-2b0a-110ba031a8b2/mzaf_7388299489876496333.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f8/31/37/f8313788-8142-14ae-2b0a-110ba031a8b2/mzaf_7388299489876496333.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Dead Pool",
           "duration": "3:02",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/18/31/83/18318364-b4b5-c9fd-7942-fd1b2d5000a3/mzaf_3037700591972692220.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/18/31/83/18318364-b4b5-c9fd-7942-fd1b2d5000a3/mzaf_3037700591972692220.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Hot Fries",
           "duration": "2:35",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bb/5a/77/bb5a7741-d2b7-aa5a-b2da-c189295e1f0f/mzaf_14763303893673480004.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bb/5a/77/bb5a7741-d2b7-aa5a-b2da-c189295e1f0f/mzaf_14763303893673480004.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Get Down",
           "duration": "3:10",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fb/97/bb/fb97bbf9-28e5-05f8-e8b5-ca99f4b4ab0f/mzaf_6947612661015572830.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fb/97/bb/fb97bbf9-28e5-05f8-e8b5-ca99f4b4ab0f/mzaf_6947612661015572830.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Kurtis",
           "duration": "2:00",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/41/af/70/41af70f4-241a-9aa2-3735-9b46f9e79c2f/mzaf_7427359499151561253.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/41/af/70/41af70f4-241a-9aa2-3735-9b46f9e79c2f/mzaf_7427359499151561253.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Gun Powder",
           "duration": "2:40",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/65/f9/05/65f90565-5c90-de27-f508-a9444a6eb13a/mzaf_3707959646991119932.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/65/f9/05/65f90565-5c90-de27-f508-a9444a6eb13a/mzaf_3707959646991119932.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "Boyz In The Hood",
           "duration": "2:17",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/75/aa/aa/75aaaad4-bfb2-f19b-cd6b-a5e4d13223fb/mzaf_15773493649269979207.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/75/aa/aa/75aaaad4-bfb2-f19b-cd6b-a5e4d13223fb/mzaf_15773493649269979207.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "I'm Tryna F**k",
           "duration": "2:16",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e6/36/cb/e636cb2d-037a-33e4-c08d-caa5015bec80/mzaf_2584183426003142009.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e6/36/cb/e636cb2d-037a-33e4-c08d-caa5015bec80/mzaf_2584183426003142009.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "Long Live Jerry Springer",
           "duration": "2:55",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a8/f8/a6/a8f8a6d1-bd1a-df47-5d4d-88c6fa952852/mzaf_445466023636146698.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a8/f8/a6/a8f8a6d1-bd1a-df47-5d4d-88c6fa952852/mzaf_445466023636146698.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "Kimbo",
           "duration": "2:28",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a0/d3/c9/a0d3c917-513f-1991-2f03-06a02aa411e1/mzaf_13009480832330786740.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a0/d3/c9/a0d3c917-513f-1991-2f03-06a02aa411e1/mzaf_13009480832330786740.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 18,
           "title": "Swag",
           "duration": "2:54",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/c3/c2/4cc3c285-9fcc-b619-6096-365406e2e3d6/mzaf_6589937457406154647.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/c3/c2/4cc3c285-9fcc-b619-6096-365406e2e3d6/mzaf_6589937457406154647.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 19,
           "title": "Canoozled",
           "duration": "2:46",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b9/a4/c4/b9a4c45c-e1a1-6db4-5ce5-857d5ff15522/mzaf_943341165724163129.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b9/a4/c4/b9a4c45c-e1a1-6db4-5ce5-857d5ff15522/mzaf_943341165724163129.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 20,
           "title": "See Her Smile",
           "duration": "3:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e7/ae/94/e7ae94c8-ded5-20c3-ffdf-fcffa61ced4b/mzaf_1616362448348598313.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e7/ae/94/e7ae94c8-ded5-20c3-ffdf-fcffa61ced4b/mzaf_1616362448348598313.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -184,73 +215,85 @@ const data = {
           "number": 1,
           "title": "What You Bang For",
           "duration": "2:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b5/61/70/b56170ec-0a34-231a-d245-4aefcc18cf22/mzaf_12850058405453444625.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b5/61/70/b56170ec-0a34-231a-d245-4aefcc18cf22/mzaf_12850058405453444625.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Billie Jean",
           "duration": "2:11",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/54/74/54/5474544e-ca61-7979-2027-719d7022d1c7/mzaf_15643864262019627367.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/54/74/54/5474544e-ca61-7979-2027-719d7022d1c7/mzaf_15643864262019627367.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "So Loud",
           "duration": "2:27",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9b/ac/de/9bacdeab-c505-8126-7304-bc2e75755dc2/mzaf_10596540338555270707.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9b/ac/de/9bacdeab-c505-8126-7304-bc2e75755dc2/mzaf_10596540338555270707.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Blickating (feat. Lil Birdie)",
           "duration": "2:25",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f2/34/28/f2342825-8333-7ac3-46b8-7fe257dd9f8b/mzaf_12769732786276985739.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f2/34/28/f2342825-8333-7ac3-46b8-7fe257dd9f8b/mzaf_12769732786276985739.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "How Else To Say It",
           "duration": "2:18",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cf/a5/7a/cfa57a00-f81e-3a45-65ce-ed9019d9c6f1/mzaf_10242122788695607853.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cf/a5/7a/cfa57a00-f81e-3a45-65ce-ed9019d9c6f1/mzaf_10242122788695607853.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Before I Got Rich",
           "duration": "2:22",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/03/3a/91/033a91d6-1144-2712-cfb0-242357cf0274/mzaf_17605399437911874478.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/03/3a/91/033a91d6-1144-2712-cfb0-242357cf0274/mzaf_17605399437911874478.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Shrimp And Gritz",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c1/13/3d/c1133d0e-88ed-447c-22aa-276f28c19ffd/mzaf_16916387080487523383.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c1/13/3d/c1133d0e-88ed-447c-22aa-276f28c19ffd/mzaf_16916387080487523383.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Tried Me",
           "duration": "3:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/92/53/09/92530912-b409-e378-5ef4-7951a6db4d9c/mzaf_9894161030739512222.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/92/53/09/92530912-b409-e378-5ef4-7951a6db4d9c/mzaf_9894161030739512222.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "All I Seen",
           "duration": "2:26",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8b/77/ec/8b77ec45-1c70-0689-c86b-45b2ba1fba47/mzaf_13309573434026151439.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8b/77/ec/8b77ec45-1c70-0689-c86b-45b2ba1fba47/mzaf_13309573434026151439.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "What You Gon Do",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f1/c0/7d/f1c07d1c-13e8-4afb-8540-1ed3c58569e4/mzaf_1561275983371381319.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f1/c0/7d/f1c07d1c-13e8-4afb-8540-1ed3c58569e4/mzaf_1561275983371381319.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Gen 5 (feat. Lil Birdie)",
           "duration": "2:55",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/da/fe/9c/dafe9c43-5401-bb67-aebc-0f6c3eb59fcd/mzaf_6656676225998589635.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/da/fe/9c/dafe9c43-5401-bb67-aebc-0f6c3eb59fcd/mzaf_6656676225998589635.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Brand New",
           "duration": "2:08",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/69/65/4f/69654fe8-70ea-4f0c-03ad-63b368cc1d5a/mzaf_11479710139886010581.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/69/65/4f/69654fe8-70ea-4f0c-03ad-63b368cc1d5a/mzaf_11479710139886010581.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -264,103 +307,120 @@ const data = {
           "number": 1,
           "title": "Intro",
           "duration": "1:28",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/8a/95/a18a95b0-9a0d-a906-3fd9-29894ef66fe2/mzaf_11635014698713692214.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/8a/95/a18a95b0-9a0d-a906-3fd9-29894ef66fe2/mzaf_11635014698713692214.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "I Was Blinded",
           "duration": "2:42",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/86/37/4c863799-88ce-5838-8e6e-0277e94d9bdf/mzaf_7933034324070101366.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/86/37/4c863799-88ce-5838-8e6e-0277e94d9bdf/mzaf_7933034324070101366.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "It Gets Better",
           "duration": "2:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/46/fa/3b/46fa3bf5-8b5c-f701-a020-964562e85da9/mzaf_11534819433186033543.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/46/fa/3b/46fa3bf5-8b5c-f701-a020-964562e85da9/mzaf_11534819433186033543.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Success (Les Talk About It)",
           "duration": "2:46",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f2/bc/0d/f2bc0d8e-daf9-87c6-eb34-08bf92b64ec8/mzaf_2195532414410243792.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f2/bc/0d/f2bc0d8e-daf9-87c6-eb34-08bf92b64ec8/mzaf_2195532414410243792.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Heal In Pain",
           "duration": "2:36",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/67/4d/00/674d00e9-ccea-5746-62d1-430e639ddd08/mzaf_16718809349751239540.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/67/4d/00/674d00e9-ccea-5746-62d1-430e639ddd08/mzaf_16718809349751239540.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Answer My Prayers",
           "duration": "1:57",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/1d/06/a91d06a2-c57a-b8e2-6675-bf210bb6e5b5/mzaf_3561647045096667173.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/1d/06/a91d06a2-c57a-b8e2-6675-bf210bb6e5b5/mzaf_3561647045096667173.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Get Out",
           "duration": "2:27",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1e/39/6d/1e396d52-a2e5-6f84-2268-7481d96c5511/mzaf_15138070224679509525.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1e/39/6d/1e396d52-a2e5-6f84-2268-7481d96c5511/mzaf_15138070224679509525.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Counting Racks",
           "duration": "2:16",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6e/2d/64/6e2d648c-85a4-3b9c-0c55-232074ce4a41/mzaf_10374767905437330628.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6e/2d/64/6e2d648c-85a4-3b9c-0c55-232074ce4a41/mzaf_10374767905437330628.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Let's Get Into It",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5a/50/7d/5a507d6a-b36a-9ef0-a66a-3a6b5dca4b88/mzaf_13219773767221495628.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5a/50/7d/5a507d6a-b36a-9ef0-a66a-3a6b5dca4b88/mzaf_13219773767221495628.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Heart On My Sleeve",
           "duration": "2:25",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/71/a5/c8/71a5c81d-f286-0102-3860-d63f64b463bf/mzaf_16396302975020765288.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/71/a5/c8/71a5c81d-f286-0102-3860-d63f64b463bf/mzaf_16396302975020765288.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Racks In The Morning",
           "duration": "2:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9d/5e/c7/9d5ec761-87d9-6cf9-15d4-6c2c42b536a9/mzaf_6848518037990663239.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9d/5e/c7/9d5ec761-87d9-6cf9-15d4-6c2c42b536a9/mzaf_6848518037990663239.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Never Be Broke",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d2/a4/c9/d2a4c95b-f298-4706-c3f4-0e1335524c4e/mzaf_3411708848041092360.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d2/a4/c9/d2a4c95b-f298-4706-c3f4-0e1335524c4e/mzaf_3411708848041092360.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Who\u2019s The Flyest",
           "duration": "1:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9d/80/d6/9d80d6aa-656a-dbe5-810d-da87a84e6b94/mzaf_10516417009065952702.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9d/80/d6/9d80d6aa-656a-dbe5-810d-da87a84e6b94/mzaf_10516417009065952702.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "Life Of A Real Ngga",
           "duration": "1:55",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/58/84/d0/5884d04b-2735-8637-9925-06224831f3b0/mzaf_3665759771446196223.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/58/84/d0/5884d04b-2735-8637-9925-06224831f3b0/mzaf_3665759771446196223.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "Life\u2019s Not A Game",
           "duration": "3:14",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/95/c9/44/95c94424-a4af-2273-019a-1bf241427d14/mzaf_8366142807339320910.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/95/c9/44/95c94424-a4af-2273-019a-1bf241427d14/mzaf_8366142807339320910.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "You A Star",
           "duration": "2:38",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/76/78/00/76780073-07d8-bd3d-b1db-8380acc9e792/mzaf_4159674353674122088.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/76/78/00/76780073-07d8-bd3d-b1db-8380acc9e792/mzaf_4159674353674122088.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "You Perfect",
           "duration": "2:17",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/d6/e9/a1d6e927-143f-2d91-257d-fb45527accc1/mzaf_1483058930536829255.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/d6/e9/a1d6e927-143f-2d91-257d-fb45527accc1/mzaf_1483058930536829255.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     }
@@ -376,79 +436,92 @@ const data = {
           "number": 1,
           "title": "She Tinder",
           "duration": "2:05",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/09/ef/f6/09eff649-4f37-b44e-2cf3-c144982ab9fb/mzaf_10594050380128909271.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/09/ef/f6/09eff649-4f37-b44e-2cf3-c144982ab9fb/mzaf_10594050380128909271.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Good Morning",
           "duration": "1:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4f/14/00/4f140090-0921-c024-c7f5-12876b705bb3/mzaf_14961147355020565777.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4f/14/00/4f140090-0921-c024-c7f5-12876b705bb3/mzaf_14961147355020565777.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Hands Up (feat. YounnMoh)",
           "duration": "1:59",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ae/d9/5b/aed95b5c-62f9-b100-844a-c5dc540bbe41/mzaf_393129914192418632.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ae/d9/5b/aed95b5c-62f9-b100-844a-c5dc540bbe41/mzaf_393129914192418632.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Sweater Weather",
           "duration": "2:13",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fc/85/ea/fc85eaa8-182e-f624-a4b5-63d6ba237b1a/mzaf_18006803524108215642.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fc/85/ea/fc85eaa8-182e-f624-a4b5-63d6ba237b1a/mzaf_18006803524108215642.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Hop Aht",
           "duration": "1:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fc/95/64/fc9564f8-6cba-c0ea-f649-dfd5dae9e30c/mzaf_12399807044538788036.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fc/95/64/fc9564f8-6cba-c0ea-f649-dfd5dae9e30c/mzaf_12399807044538788036.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Showered Up",
           "duration": "1:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/36/f6/6a/36f66af5-8daf-9960-dd99-9e769ce5fd7b/mzaf_14066266579026997854.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/36/f6/6a/36f66af5-8daf-9960-dd99-9e769ce5fd7b/mzaf_14066266579026997854.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Lucky Charm",
           "duration": "1:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bb/70/e7/bb70e78b-9509-5688-8494-49726bd1c73c/mzaf_13647140401466179712.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bb/70/e7/bb70e78b-9509-5688-8494-49726bd1c73c/mzaf_13647140401466179712.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Duck",
           "duration": "1:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/83/e3/c5/83e3c5e6-6270-081f-3d8d-00e8151c2bc7/mzaf_14321581217322607508.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/83/e3/c5/83e3c5e6-6270-081f-3d8d-00e8151c2bc7/mzaf_14321581217322607508.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "3am Lobby",
           "duration": "2:03",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6b/80/6f/6b806f78-af70-633f-3d46-4ed63366bfcb/mzaf_16202436219466992268.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6b/80/6f/6b806f78-af70-633f-3d46-4ed63366bfcb/mzaf_16202436219466992268.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Ruthless",
           "duration": "2:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5e/58/e2/5e58e2d8-68db-8db9-6f93-ec1a40265eef/mzaf_9149829005376633837.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5e/58/e2/5e58e2d8-68db-8db9-6f93-ec1a40265eef/mzaf_9149829005376633837.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Too Many (feat. imsomarcus)",
           "duration": "1:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5b/3f/2f/5b3f2f7b-2848-e4a6-efbb-093159a6b9f7/mzaf_8756890153846562492.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5b/3f/2f/5b3f2f7b-2848-e4a6-efbb-093159a6b9f7/mzaf_8756890153846562492.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Shooting Star",
           "duration": "2:11",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d8/4e/53/d84e53b7-1320-df6a-c1c5-18738a2a1784/mzaf_10901520515780352874.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d8/4e/53/d84e53b7-1320-df6a-c1c5-18738a2a1784/mzaf_10901520515780352874.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Do Re Mi",
           "duration": "1:51",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6b/cb/f2/6bcbf211-c24e-fef3-04c8-c17f12180446/mzaf_7122615751679790699.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6b/cb/f2/6bcbf211-c24e-fef3-04c8-c17f12180446/mzaf_7122615751679790699.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -462,55 +535,64 @@ const data = {
           "number": 1,
           "title": "Plate",
           "duration": "1:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/54/9c/b8/549cb87f-275f-de6d-8d09-53ae2e196ed4/mzaf_6203729129154864775.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/54/9c/b8/549cb87f-275f-de6d-8d09-53ae2e196ed4/mzaf_6203729129154864775.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Living Room",
           "duration": "2:03",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0a/3e/36/0a3e36d5-d651-1272-dec9-82db0848e6d9/mzaf_17671182772066540449.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0a/3e/36/0a3e36d5-d651-1272-dec9-82db0848e6d9/mzaf_17671182772066540449.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Clueless",
           "duration": "2:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/17/45/81/1745813d-d8b7-6d24-2121-e4e012120ecd/mzaf_2023198174860079353.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/17/45/81/1745813d-d8b7-6d24-2121-e4e012120ecd/mzaf_2023198174860079353.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Sub Zero",
           "duration": "2:14",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/20/9f/23209fdf-3bd6-3910-f3fb-eec526ac065b/mzaf_10419669704838706071.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/20/9f/23209fdf-3bd6-3910-f3fb-eec526ac065b/mzaf_10419669704838706071.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Tangled Up",
           "duration": "2:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/17/41/571741f6-ad4f-b9c2-adaa-07de6f12db37/mzaf_8934897749849760925.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/17/41/571741f6-ad4f-b9c2-adaa-07de6f12db37/mzaf_8934897749849760925.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Mary Jane",
           "duration": "2:14",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fb/29/e8/fb29e8df-b58c-98e7-5e0e-322456bf7626/mzaf_13709253656434033182.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fb/29/e8/fb29e8df-b58c-98e7-5e0e-322456bf7626/mzaf_13709253656434033182.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "U Cried",
           "duration": "1:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/47/9e/bb/479ebb7e-0491-cb5d-7439-68ac52d030df/mzaf_7815545232825715122.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/47/9e/bb/479ebb7e-0491-cb5d-7439-68ac52d030df/mzaf_7815545232825715122.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Green n Goin",
           "duration": "2:31",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/96/8e/73/968e7357-5328-077c-2180-d4ae78140447/mzaf_18232461477449080555.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/96/8e/73/968e7357-5328-077c-2180-d4ae78140447/mzaf_18232461477449080555.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Rehab",
           "duration": "1:46",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/54/6a/73/546a7337-edb9-da01-7499-228a99aa6c89/mzaf_7583794493026747488.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/54/6a/73/546a7337-edb9-da01-7499-228a99aa6c89/mzaf_7583794493026747488.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -524,55 +606,64 @@ const data = {
           "number": 1,
           "title": "Gfreak",
           "duration": "1:55",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/82/8d/7c/828d7ca6-783c-8931-9e11-5986f9402369/mzaf_1387153534210885706.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/82/8d/7c/828d7ca6-783c-8931-9e11-5986f9402369/mzaf_1387153534210885706.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Brew Love (feat. yotti)",
           "duration": "2:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9e/6f/a4/9e6fa4c6-5481-1445-1d0d-f78ceb9a15ae/mzaf_13069081807522535793.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9e/6f/a4/9e6fa4c6-5481-1445-1d0d-f78ceb9a15ae/mzaf_13069081807522535793.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Black N' White",
           "duration": "1:43",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/e4/2d/d5e42d28-133f-973d-9d8d-710a6a4fb1ce/mzaf_1003745454508183107.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/e4/2d/d5e42d28-133f-973d-9d8d-710a6a4fb1ce/mzaf_1003745454508183107.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Outta State (feat. Baby Auto & imsomarcus)",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/50/c0/bf/50c0bf0e-6d4c-eb94-f4e7-d42902f8374b/mzaf_14500982803704389854.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/50/c0/bf/50c0bf0e-6d4c-eb94-f4e7-d42902f8374b/mzaf_14500982803704389854.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Tinder Date",
           "duration": "1:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1c/1b/f7/1c1bf7b8-c89c-7389-bb2b-b6e4b0f2d449/mzaf_12714525019621168693.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1c/1b/f7/1c1bf7b8-c89c-7389-bb2b-b6e4b0f2d449/mzaf_12714525019621168693.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Cash Cow",
           "duration": "2:01",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/9a/da/999ada88-c1bb-1709-b4cc-0b158154a751/mzaf_4836472956576139071.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/9a/da/999ada88-c1bb-1709-b4cc-0b158154a751/mzaf_4836472956576139071.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "P Wit Ha",
           "duration": "1:46",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/56/af/d8/56afd88e-11f7-7a8c-9845-33c5420b9d5c/mzaf_3634527619686812392.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/56/af/d8/56afd88e-11f7-7a8c-9845-33c5420b9d5c/mzaf_3634527619686812392.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Heart 2 Heart",
           "duration": "1:59",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/97/fb/83/97fb83e8-e083-133f-f985-3d3d90c83ad7/mzaf_9164387073742777583.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/97/fb/83/97fb83e8-e083-133f-f985-3d3d90c83ad7/mzaf_9164387073742777583.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Uu Look Chinese",
           "duration": "1:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bf/03/de/bf03de1f-e855-b037-5032-3f296911840e/mzaf_7703907114571505664.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bf/03/de/bf03de1f-e855-b037-5032-3f296911840e/mzaf_7703907114571505664.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     }
@@ -588,103 +679,120 @@ const data = {
           "number": 1,
           "title": "Enough Ammo",
           "duration": "2:29",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bf/4a/91/bf4a91c3-6089-d370-73f9-9a0383dc9d39/mzaf_12948006955954492124.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bf/4a/91/bf4a91c3-6089-d370-73f9-9a0383dc9d39/mzaf_12948006955954492124.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Forgot My Manners",
           "duration": "2:17",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/2c/60/d52c60f4-5541-3bdd-130d-345d7ddc9181/mzaf_8839902453654860134.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/2c/60/d52c60f4-5541-3bdd-130d-345d7ddc9181/mzaf_8839902453654860134.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 3,
           "title": "3rd World",
           "duration": "2:25",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/88/6c/20/886c208e-ff9e-d80e-cddb-e33af4c3fdb6/mzaf_17758276213410403420.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/88/6c/20/886c208e-ff9e-d80e-cddb-e33af4c3fdb6/mzaf_17758276213410403420.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Different Goals",
           "duration": "2:29",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/b0/c9/6db0c9b3-2c9b-a645-7f55-f071cb96ed85/mzaf_945015358113756690.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/b0/c9/6db0c9b3-2c9b-a645-7f55-f071cb96ed85/mzaf_945015358113756690.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "F**k Sum",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9e/f8/bc/9ef8bc61-420d-4e0c-e8f8-a3cdc86d91a5/mzaf_10884107112083562177.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9e/f8/bc/9ef8bc61-420d-4e0c-e8f8-a3cdc86d91a5/mzaf_10884107112083562177.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Whatchu Sayin",
           "duration": "2:30",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/82/80/f7/8280f7aa-8799-ddc3-62dc-fd9db7c46068/mzaf_13105662214436021976.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/82/80/f7/8280f7aa-8799-ddc3-62dc-fd9db7c46068/mzaf_13105662214436021976.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Face Card",
           "duration": "2:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/32/9c/35/329c35de-bd52-95a5-a9c1-fa1878515cf7/mzaf_45829075309608210.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/32/9c/35/329c35de-bd52-95a5-a9c1-fa1878515cf7/mzaf_45829075309608210.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Blame Us",
           "duration": "2:22",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5d/ee/b8/5deeb888-1a98-7254-fa9b-6e22682262a6/mzaf_8583887951219046617.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5d/ee/b8/5deeb888-1a98-7254-fa9b-6e22682262a6/mzaf_8583887951219046617.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "I Got A Army",
           "duration": "2:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/09/1b/dc/091bdcdf-ef34-2f11-59b5-42fd9bb1fa65/mzaf_6808068238174204600.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/09/1b/dc/091bdcdf-ef34-2f11-59b5-42fd9bb1fa65/mzaf_6808068238174204600.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Tailor Made",
           "duration": "2:21",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cc/c1/b2/ccc1b23b-856e-9926-0723-16bb40f19b61/mzaf_950745451720635271.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cc/c1/b2/ccc1b23b-856e-9926-0723-16bb40f19b61/mzaf_950745451720635271.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Levels, Vol. 2",
           "duration": "1:51",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/59/80/68/598068e9-46c5-83ad-671a-e09583ae44b1/mzaf_3798122663323671125.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/59/80/68/598068e9-46c5-83ad-671a-e09583ae44b1/mzaf_3798122663323671125.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Backdoor",
           "duration": "2:25",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c4/11/d1/c411d14d-f87d-a61d-8a99-8b785913746e/mzaf_11203689714513050147.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c4/11/d1/c411d14d-f87d-a61d-8a99-8b785913746e/mzaf_11203689714513050147.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "All Black",
           "duration": "2:04",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/04/cd/4e/04cd4eec-7eff-2f97-3f9c-16c779da55f3/mzaf_3395447175509994481.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/04/cd/4e/04cd4eec-7eff-2f97-3f9c-16c779da55f3/mzaf_3395447175509994481.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "8 Mile",
           "duration": "2:37",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7a/2b/56/7a2b567c-6b4e-9e0e-c3fd-a501cf7c6b92/mzaf_8159073562206350391.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7a/2b/56/7a2b567c-6b4e-9e0e-c3fd-a501cf7c6b92/mzaf_8159073562206350391.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "Yung Killa Camp",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/65/47/e7/6547e7fe-0085-4778-dad3-4a62a1b4568a/mzaf_6927416911192348536.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/65/47/e7/6547e7fe-0085-4778-dad3-4a62a1b4568a/mzaf_6927416911192348536.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "Get Wicked",
           "duration": "1:54",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9a/dd/76/9add76b8-e775-e09c-3086-d56c1b6ff442/mzaf_1828991875641542162.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9a/dd/76/9add76b8-e775-e09c-3086-d56c1b6ff442/mzaf_1828991875641542162.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "Take A Risk",
           "duration": "3:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/47/a9/a5/47a9a57a-3c89-bde4-764d-db4044436953/mzaf_8930882474417013795.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/47/a9/a5/47a9a57a-3c89-bde4-764d-db4044436953/mzaf_8930882474417013795.plus.aac.p.m4a",
+          "is_top": true
         }
       ]
     },
@@ -698,121 +806,141 @@ const data = {
           "number": 1,
           "title": "Discussions Off Xans",
           "duration": "2:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9b/f1/6b/9bf16b3a-56c1-035e-3da7-8a978f3e8cad/mzaf_6034856134356325238.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9b/f1/6b/9bf16b3a-56c1-035e-3da7-8a978f3e8cad/mzaf_6034856134356325238.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Thoughts While Incarcerated",
           "duration": "3:41",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/14/43/5e/14435e51-958f-2e30-ef1d-679129b8e46e/mzaf_13724697220797835293.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/14/43/5e/14435e51-958f-2e30-ef1d-679129b8e46e/mzaf_13724697220797835293.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Dey Just Actors (Duwap Kaine Remix)",
           "duration": "3:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/9f/2e/ca9f2edc-08ad-a2b0-5a84-88c05a8f7157/mzaf_7611907219086622760.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/9f/2e/ca9f2edc-08ad-a2b0-5a84-88c05a8f7157/mzaf_7611907219086622760.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Please Dont",
           "duration": "2:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0a/c4/03/0ac403ca-7397-f8fc-df19-6f3570c481af/mzaf_15845423316866239570.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0a/c4/03/0ac403ca-7397-f8fc-df19-6f3570c481af/mzaf_15845423316866239570.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Brian Nichols",
           "duration": "3:04",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c9/8b/66/c98b66c1-93ef-e4b5-6644-f2199b200dd4/mzaf_4963981100760919030.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c9/8b/66/c98b66c1-93ef-e4b5-6644-f2199b200dd4/mzaf_4963981100760919030.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Bet!",
           "duration": "3:16",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cf/4d/9e/cf4d9ea7-9dfc-7aa5-26a0-354b750b1b76/mzaf_4377069991904378580.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cf/4d/9e/cf4d9ea7-9dfc-7aa5-26a0-354b750b1b76/mzaf_4377069991904378580.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "La Familia",
           "duration": "2:58",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b7/8e/25/b78e2528-c1e5-45cf-2028-5179ed120c66/mzaf_16908078960138099276.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b7/8e/25/b78e2528-c1e5-45cf-2028-5179ed120c66/mzaf_16908078960138099276.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Copy My Flow",
           "duration": "1:18",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ca/75/8d/ca758dd7-c0ad-c4ff-ed82-f89639184b54/mzaf_11665075629255734807.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ca/75/8d/ca758dd7-c0ad-c4ff-ed82-f89639184b54/mzaf_11665075629255734807.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Live & Die Again",
           "duration": "2:08",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a1/7b/a0/a17ba0fa-2f78-eb1c-1175-7cb3b353b7fc/mzaf_13493441430213822066.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a1/7b/a0/a17ba0fa-2f78-eb1c-1175-7cb3b353b7fc/mzaf_13493441430213822066.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Swamp",
           "duration": "1:25",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/44/87/eb/4487ebfb-e36c-6e42-ed67-e7f55fe4e1dd/mzaf_7843866750481152690.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/44/87/eb/4487ebfb-e36c-6e42-ed67-e7f55fe4e1dd/mzaf_7843866750481152690.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "FreeBabyEBG",
           "duration": "1:59",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6e/50/6d/6e506de1-9719-ae02-20fe-ca1d8ed1560e/mzaf_6031490002262202974.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6e/50/6d/6e506de1-9719-ae02-20fe-ca1d8ed1560e/mzaf_6031490002262202974.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Be Right Back",
           "duration": "2:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f8/c1/c0/f8c1c0e1-519e-e2e3-7580-4aa130b7246e/mzaf_6217770697654879331.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f8/c1/c0/f8c1c0e1-519e-e2e3-7580-4aa130b7246e/mzaf_6217770697654879331.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "How To Be a Vamp",
           "duration": "2:28",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/43/f6/fc/43f6fcdf-e136-85bf-368f-fc5e978d55df/mzaf_510360183332550463.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/43/f6/fc/43f6fcdf-e136-85bf-368f-fc5e978d55df/mzaf_510360183332550463.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "Spaz Temptation (feat. BabySolid)",
           "duration": "1:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f3/42/c5/f342c54a-afd5-f171-3d96-5c99320e8692/mzaf_2194100897338582643.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f3/42/c5/f342c54a-afd5-f171-3d96-5c99320e8692/mzaf_2194100897338582643.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "Indigo",
           "duration": "2:00",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a5/ec/4c/a5ec4c43-6582-549b-8816-d8b04787a340/mzaf_8754837922303571815.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a5/ec/4c/a5ec4c43-6582-549b-8816-d8b04787a340/mzaf_8754837922303571815.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "Close Range",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/88/75/e9/8875e9b4-60be-993c-210f-bfa5b07f15b1/mzaf_12728720615208289351.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/88/75/e9/8875e9b4-60be-993c-210f-bfa5b07f15b1/mzaf_12728720615208289351.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "Lemme Be Ya Plug",
           "duration": "2:52",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f3/4e/7f/f34e7fe5-becf-dbb3-38b6-32c5431449d8/mzaf_15781503503308424296.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f3/4e/7f/f34e7fe5-becf-dbb3-38b6-32c5431449d8/mzaf_15781503503308424296.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 18,
           "title": "Gun Play Business",
           "duration": "2:28",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b1/cc/e5/b1cce58e-a669-f0ba-1775-195d0e7394ba/mzaf_11246443534849192255.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b1/cc/e5/b1cce58e-a669-f0ba-1775-195d0e7394ba/mzaf_11246443534849192255.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 19,
           "title": "Wish Em Well",
           "duration": "2:29",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8f/18/49/8f18492d-9641-23fa-ba53-4e73d8a7c5f9/mzaf_14263638423806213314.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8f/18/49/8f18492d-9641-23fa-ba53-4e73d8a7c5f9/mzaf_14263638423806213314.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 20,
           "title": "Musical Villian",
           "duration": "2:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/26/2d/91/262d91a2-0076-373b-f5b3-9dcf3878c5a8/mzaf_14331506337564778907.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/26/2d/91/262d91a2-0076-373b-f5b3-9dcf3878c5a8/mzaf_14331506337564778907.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -826,73 +954,85 @@ const data = {
           "number": 1,
           "title": "My Last Breath",
           "duration": "1:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d5/f0/30/d5f03040-50f6-d174-8b65-f649b6d4c631/mzaf_1663687495193060758.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d5/f0/30/d5f03040-50f6-d174-8b65-f649b6d4c631/mzaf_1663687495193060758.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "POTHEAD & STONER",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/64/b8/55/64b85528-b88c-8931-4046-4dbbd8fe1bed/mzaf_14320202084023061404.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/64/b8/55/64b85528-b88c-8931-4046-4dbbd8fe1bed/mzaf_14320202084023061404.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "5O5",
           "duration": "2:30",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8d/fe/fc/8dfefc64-c6cb-d335-1872-f9c9a6256252/mzaf_14739557482465153086.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8d/fe/fc/8dfefc64-c6cb-d335-1872-f9c9a6256252/mzaf_14739557482465153086.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "How Vampz Feel",
           "duration": "2:19",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/ca/35/a1ca3534-6b50-47e5-9868-55886472a4a9/mzaf_10968503642593646998.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/ca/35/a1ca3534-6b50-47e5-9868-55886472a4a9/mzaf_10968503642593646998.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Let's Get Active",
           "duration": "2:15",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b3/cd/e2/b3cde242-e649-e10a-8edd-0116f69ecdce/mzaf_3947318659427122015.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b3/cd/e2/b3cde242-e649-e10a-8edd-0116f69ecdce/mzaf_3947318659427122015.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Mystikal Draco's (Psychotic)",
           "duration": "2:35",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c9/1d/72/c91d72fb-6197-459e-ff24-e5a7a86f5e10/mzaf_3600338555336327524.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c9/1d/72/c91d72fb-6197-459e-ff24-e5a7a86f5e10/mzaf_3600338555336327524.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "CopperHead",
           "duration": "3:42",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a8/c1/3a/a8c13acb-4bfa-ddbe-d597-a52bfbf22e31/mzaf_8714518150484587019.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a8/c1/3a/a8c13acb-4bfa-ddbe-d597-a52bfbf22e31/mzaf_8714518150484587019.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "You Not Da Only 1",
           "duration": "2:20",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/77/19/ed/7719ed7f-53ed-add4-df92-a56252e04a9f/mzaf_289903403633152572.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/77/19/ed/7719ed7f-53ed-add4-df92-a56252e04a9f/mzaf_289903403633152572.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "No Espa\u00f1ol",
           "duration": "2:51",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/13/78/99137863-3c15-1362-009c-1356da0d6870/mzaf_2350152464012818019.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/13/78/99137863-3c15-1362-009c-1356da0d6870/mzaf_2350152464012818019.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "BLV Anthem",
           "duration": "2:19",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f0/0a/4f/f00a4f08-7a18-0451-2a4f-2b25a021d4a3/mzaf_17537825048076491121.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f0/0a/4f/f00a4f08-7a18-0451-2a4f-2b25a021d4a3/mzaf_17537825048076491121.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Who Don't Love Money?",
           "duration": "2:39",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/22/23/4b/22234ba4-778e-abc8-5e4a-a6a9ec885216/mzaf_10715881647495596669.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/22/23/4b/22234ba4-778e-abc8-5e4a-a6a9ec885216/mzaf_10715881647495596669.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "I'm Oso Shiesty",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8a/b8/5c/8ab85c09-2311-dddd-3654-b41eae954a70/mzaf_12033729645476344538.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8a/b8/5c/8ab85c09-2311-dddd-3654-b41eae954a70/mzaf_12033729645476344538.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     }
@@ -908,103 +1048,120 @@ const data = {
           "number": 1,
           "title": "BabyDrill vs. MadMan",
           "duration": "2:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/46/ed/46/46ed4686-1889-1f78-f7a4-18893405facb/mzaf_7676592726466928669.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/46/ed/46/46ed4686-1889-1f78-f7a4-18893405facb/mzaf_7676592726466928669.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "On My Conscious",
           "duration": "2:34",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/45/7f/54/457f5477-5afc-7b12-1df2-02d834a3397a/mzaf_10726863497068772930.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/45/7f/54/457f5477-5afc-7b12-1df2-02d834a3397a/mzaf_10726863497068772930.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Back From The Dead",
           "duration": "1:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dd/89/f5/dd89f58c-5ca8-7ab5-7a21-507aad487909/mzaf_17097273146786530170.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dd/89/f5/dd89f58c-5ca8-7ab5-7a21-507aad487909/mzaf_17097273146786530170.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 4,
           "title": "King Smoke",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/9c/ee/579ceeeb-4c99-3996-f65b-789b69541f12/mzaf_18379788999752702389.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/9c/ee/579ceeeb-4c99-3996-f65b-789b69541f12/mzaf_18379788999752702389.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Slight Dub (feat. 21 Savage & Young Nudy)",
           "duration": "3:02",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/34/69/3c/34693c99-1c2a-07ac-fb57-22dc20b51ac2/mzaf_12243683307471651965.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/34/69/3c/34693c99-1c2a-07ac-fb57-22dc20b51ac2/mzaf_12243683307471651965.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 6,
           "title": "Murder Rate",
           "duration": "2:35",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d6/8f/0d/d68f0d2d-ca72-ab3f-7efb-8e8460d768f6/mzaf_4239061815682000471.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d6/8f/0d/d68f0d2d-ca72-ab3f-7efb-8e8460d768f6/mzaf_4239061815682000471.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Mad As F**k",
           "duration": "1:49",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/66/ea/b5/66eab576-20eb-49ee-992f-fef7d1d48564/mzaf_8823256501480698683.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/66/ea/b5/66eab576-20eb-49ee-992f-fef7d1d48564/mzaf_8823256501480698683.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Send Deposit",
           "duration": "2:38",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/15/30/98/15309873-ed44-641a-8ce9-e0a15b837eb7/mzaf_10014818766926920592.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/15/30/98/15309873-ed44-641a-8ce9-e0a15b837eb7/mzaf_10014818766926920592.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Load Up Hop Out",
           "duration": "2:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5d/e1/eb/5de1eb37-79c2-2c1e-8063-b4d8ed5dce81/mzaf_8131055673223056968.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5d/e1/eb/5de1eb37-79c2-2c1e-8063-b4d8ed5dce81/mzaf_8131055673223056968.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Woke Up",
           "duration": "2:26",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/07/b0/e9/07b0e90e-5910-b929-3752-6b1e8cdc5590/mzaf_6454370093165624958.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/07/b0/e9/07b0e90e-5910-b929-3752-6b1e8cdc5590/mzaf_6454370093165624958.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Vibe Check",
           "duration": "2:30",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0f/b9/f7/0fb9f748-56c4-ed05-5042-3f4cf4cb09e4/mzaf_10167226417840789370.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0f/b9/f7/0fb9f748-56c4-ed05-5042-3f4cf4cb09e4/mzaf_10167226417840789370.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Stop Running",
           "duration": "1:59",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/35/38/12/353812d7-96cc-696b-efc0-e856a205521f/mzaf_8366052495137222468.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/35/38/12/353812d7-96cc-696b-efc0-e856a205521f/mzaf_8366052495137222468.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Drug Sex",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/88/65/2388652b-dd6a-5c16-ea39-44052fee28c6/mzaf_6244979996227626840.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/88/65/2388652b-dd6a-5c16-ea39-44052fee28c6/mzaf_6244979996227626840.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "Standing Ovation",
           "duration": "2:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/76/9a/a7/769aa7ff-b887-c54a-a9c2-6143f1b450ae/mzaf_10365132881908545407.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/76/9a/a7/769aa7ff-b887-c54a-a9c2-6143f1b450ae/mzaf_10365132881908545407.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "Ms. Gummy",
           "duration": "2:58",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/07/39/3b/07393baf-9abb-0754-d430-d44f38889cae/mzaf_5817108011126570217.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/07/39/3b/07393baf-9abb-0754-d430-d44f38889cae/mzaf_5817108011126570217.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "Mommy I Luh You",
           "duration": "2:31",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b7/c6/73/b7c67377-51df-210c-924c-16293e27131b/mzaf_10417316000404071389.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b7/c6/73/b7c67377-51df-210c-924c-16293e27131b/mzaf_10417316000404071389.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "Blood Bath",
           "duration": "2:09",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f4/fe/18/f4fe1823-32e6-fcb0-a047-3d4fc05c9303/mzaf_6597100970525256802.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f4/fe/18/f4fe1823-32e6-fcb0-a047-3d4fc05c9303/mzaf_6597100970525256802.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -1018,85 +1175,99 @@ const data = {
           "number": 1,
           "title": "Can't Speak Again",
           "duration": "2:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/27/bb/ec/27bbec75-08ad-605e-a133-26be497c5694/mzaf_7577115767962262520.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/27/bb/ec/27bbec75-08ad-605e-a133-26be497c5694/mzaf_7577115767962262520.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Try Me",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/81/45/ac/8145acb9-f668-742b-b3bb-d6dd743d1de5/mzaf_8883907828225535467.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/81/45/ac/8145acb9-f668-742b-b3bb-d6dd743d1de5/mzaf_8883907828225535467.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "ScoreGod (feat. Luh Tyler)",
           "duration": "2:19",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/98/b9/93/98b99361-ef26-b47b-46e0-775cbcff7264/mzaf_12388333089737369175.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/98/b9/93/98b99361-ef26-b47b-46e0-775cbcff7264/mzaf_12388333089737369175.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Watchin Now",
           "duration": "2:27",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cd/d8/d9/cdd8d99a-5d11-a74c-53a7-68abf33bfa79/mzaf_565309232194296205.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cd/d8/d9/cdd8d99a-5d11-a74c-53a7-68abf33bfa79/mzaf_565309232194296205.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Check Ups (feat. YTB Fatt & Rob49)",
           "duration": "2:27",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/44/a4/fc/44a4fcc9-4caf-8e53-68a5-466fe691c65f/mzaf_13626091030361490575.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/44/a4/fc/44a4fcc9-4caf-8e53-68a5-466fe691c65f/mzaf_13626091030361490575.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "I Can't Feel My Face",
           "duration": "2:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/56/07/0f/56070ff3-a342-54f1-2c9d-d9b88669395e/mzaf_3867651880370501462.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/56/07/0f/56070ff3-a342-54f1-2c9d-d9b88669395e/mzaf_3867651880370501462.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Just Want You (feat. Hunxho)",
           "duration": "2:54",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/be/10/5f/be105fe4-6a31-4c23-be83-f943027125bf/mzaf_1719360800693996080.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/be/10/5f/be105fe4-6a31-4c23-be83-f943027125bf/mzaf_1719360800693996080.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Detroit Flow",
           "duration": "2:34",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f6/74/55/f674552d-6ab4-30dc-5e08-44c8ec5c7b80/mzaf_4618438131667406622.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f6/74/55/f674552d-6ab4-30dc-5e08-44c8ec5c7b80/mzaf_4618438131667406622.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Down Bad",
           "duration": "2:08",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/b3/18/6db318e5-ff3c-c1f7-3b6c-ac57e32abbc1/mzaf_2095680085104373972.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/b3/18/6db318e5-ff3c-c1f7-3b6c-ac57e32abbc1/mzaf_2095680085104373972.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Ni***s Fold",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/39/45/ef/3945ef2e-1bb3-e954-9da5-9ffb33a29c74/mzaf_14196940249976843789.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/39/45/ef/3945ef2e-1bb3-e954-9da5-9ffb33a29c74/mzaf_14196940249976843789.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Now It's F**k Her",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/b4/5a/23b45a82-f597-b6af-3bb1-5b55ddf1a288/mzaf_606854861683102127.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/b4/5a/23b45a82-f597-b6af-3bb1-5b55ddf1a288/mzaf_606854861683102127.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Double Back",
           "duration": "3:09",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0e/a4/f8/0ea4f86e-042c-8b83-502a-58135f1cb4d8/mzaf_14096344193841330052.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0e/a4/f8/0ea4f86e-042c-8b83-502a-58135f1cb4d8/mzaf_14096344193841330052.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Let 'Em Know",
           "duration": "2:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/67/01/a1670131-2707-4059-835a-d8677dee163b/mzaf_15477776783766376941.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/67/01/a1670131-2707-4059-835a-d8677dee163b/mzaf_15477776783766376941.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "What's The Ticket",
           "duration": "3:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/33/d3/57/33d35726-0d5b-6e71-7d74-b9ecbc2ed9bf/mzaf_15876993565522651018.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/33/d3/57/33d35726-0d5b-6e71-7d74-b9ecbc2ed9bf/mzaf_15876993565522651018.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -1110,109 +1281,127 @@ const data = {
           "number": 1,
           "title": "Imposters",
           "duration": "1:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/02/53/ac/0253ac67-c625-c377-c91a-b339bf2d600d/mzaf_6933586555663614846.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/02/53/ac/0253ac67-c625-c377-c91a-b339bf2d600d/mzaf_6933586555663614846.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Freak (feat. Latto)",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/42/4c/ef/424cefdf-c4bc-b366-ed7b-33b56468ae58/mzaf_5859250825021950131.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/42/4c/ef/424cefdf-c4bc-b366-ed7b-33b56468ae58/mzaf_5859250825021950131.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Kanan (feat. 4lquan)",
           "duration": "2:31",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/eb/ad/6e/ebad6e2d-87a7-9faa-3598-b2fc13fd0f1d/mzaf_8416158443488203825.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/eb/ad/6e/ebad6e2d-87a7-9faa-3598-b2fc13fd0f1d/mzaf_8416158443488203825.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 4,
           "title": "Mr. CBFW (feat. G Herbo)",
           "duration": "2:43",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/fe/a1/2bfea1a1-2ff3-191c-7041-d3abb6bdf5c6/mzaf_14122099032962642020.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/fe/a1/2bfea1a1-2ff3-191c-7041-d3abb6bdf5c6/mzaf_14122099032962642020.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Ocean",
           "duration": "1:40",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a8/9e/32/a89e325e-00f0-4a03-43a3-87eb01a9d303/mzaf_14207094827280996276.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a8/9e/32/a89e325e-00f0-4a03-43a3-87eb01a9d303/mzaf_14207094827280996276.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "32 Freestyle",
           "duration": "2:25",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/0f/cb/d50fcb38-9aae-e771-6408-0cfe3f38802d/mzaf_16139914328080742590.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/0f/cb/d50fcb38-9aae-e771-6408-0cfe3f38802d/mzaf_16139914328080742590.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "What It Is",
           "duration": "2:03",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c4/50/c6/c450c6fe-2ce6-364b-f4c6-f5f07df5e3d5/mzaf_12481113608222245672.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c4/50/c6/c450c6fe-2ce6-364b-f4c6-f5f07df5e3d5/mzaf_12481113608222245672.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 8,
           "title": "Next To Go",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/12/c9/ee/12c9eeb1-4ee6-c8fc-7496-ba0f889e58d7/mzaf_7906314299616668985.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/12/c9/ee/12c9eeb1-4ee6-c8fc-7496-ba0f889e58d7/mzaf_7906314299616668985.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Black 1's",
           "duration": "1:39",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/ba/82/a9ba82c4-f1fe-54ad-3834-e92430d6ea1a/mzaf_1829224082910488344.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/ba/82/a9ba82c4-f1fe-54ad-3834-e92430d6ea1a/mzaf_1829224082910488344.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Start To Hate",
           "duration": "2:54",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e9/b4/67/e9b467a4-c962-6a3d-44ae-598e479cc508/mzaf_13356167834170799426.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e9/b4/67/e9b467a4-c962-6a3d-44ae-598e479cc508/mzaf_13356167834170799426.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Dead N*****",
           "duration": "2:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6c/44/b7/6c44b7dd-2fe4-ebcd-b496-694f86980054/mzaf_16683599511546499958.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6c/44/b7/6c44b7dd-2fe4-ebcd-b496-694f86980054/mzaf_16683599511546499958.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "War Wounds",
           "duration": "2:04",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fd/c4/b4/fdc4b4f0-4275-83d8-1b94-1a9be0c8761d/mzaf_2534395504589335997.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fd/c4/b4/fdc4b4f0-4275-83d8-1b94-1a9be0c8761d/mzaf_2534395504589335997.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Head First",
           "duration": "1:41",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3d/8f/56/3d8f5634-0067-538a-cfb1-7184c6648f8b/mzaf_2566808142906989298.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3d/8f/56/3d8f5634-0067-538a-cfb1-7184c6648f8b/mzaf_2566808142906989298.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "MadMan",
           "duration": "2:03",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d3/c2/d1/d3c2d186-3349-9b20-5cc9-9a3eef4f7689/mzaf_11452687888821657655.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d3/c2/d1/d3c2d186-3349-9b20-5cc9-9a3eef4f7689/mzaf_11452687888821657655.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "I Don't Know",
           "duration": "1:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cc/48/5b/cc485b06-748c-2ff1-eb86-e77b62f0c3e0/mzaf_10835699312220360363.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cc/48/5b/cc485b06-748c-2ff1-eb86-e77b62f0c3e0/mzaf_10835699312220360363.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "Slide",
           "duration": "2:09",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/02/ea/3c/02ea3cab-3648-62e6-9ded-2031ffc44ddb/mzaf_1532387633128224999.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/02/ea/3c/02ea3cab-3648-62e6-9ded-2031ffc44ddb/mzaf_1532387633128224999.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "Last Day In",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/87/4a/33/874a338e-8a26-b92b-5d9f-090c5293f9e6/mzaf_8540194015487147850.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/87/4a/33/874a338e-8a26-b92b-5d9f-090c5293f9e6/mzaf_8540194015487147850.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 18,
           "title": "Back In Action",
           "duration": "1:51",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6b/fe/1c/6bfe1cd3-3bfe-9b6c-ffb9-407d5a092b1d/mzaf_1404264983902436925.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6b/fe/1c/6bfe1cd3-3bfe-9b6c-ffb9-407d5a092b1d/mzaf_1404264983902436925.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     }
@@ -1228,127 +1417,148 @@ const data = {
           "number": 1,
           "title": "Wait on It",
           "duration": "2:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/dc/8c/72/dc8c7207-28af-4ab8-8ad4-04524f3a5f96/mzaf_6122070220325543158.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/dc/8c/72/dc8c7207-28af-4ab8-8ad4-04524f3a5f96/mzaf_6122070220325543158.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Today",
           "duration": "3:01",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b2/27/49/b227497e-a263-b69d-732b-0e5d17cdbdd0/mzaf_1212506626661993077.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b2/27/49/b227497e-a263-b69d-732b-0e5d17cdbdd0/mzaf_1212506626661993077.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 3,
           "title": "Don't Know Your Name",
           "duration": "2:53",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1b/3e/9a/1b3e9ad0-ecf5-4f65-832b-8b58e9251435/mzaf_14661959458615602927.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1b/3e/9a/1b3e9ad0-ecf5-4f65-832b-8b58e9251435/mzaf_14661959458615602927.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 4,
           "title": "Snakes in the Grass",
           "duration": "2:30",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6b/26/8a/6b268a0e-6353-9bc4-a59a-4c5805c61951/mzaf_18095883747445882613.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6b/26/8a/6b268a0e-6353-9bc4-a59a-4c5805c61951/mzaf_18095883747445882613.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "3am (feat. YTB Fatt)",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/89/b0/ca89b088-4988-9131-cc2f-204ee96a31b5/mzaf_9987693074145716393.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/89/b0/ca89b088-4988-9131-cc2f-204ee96a31b5/mzaf_9987693074145716393.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Double07",
           "duration": "2:10",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/80/37/e7/8037e739-8a0e-87ab-0b6b-ff030d361787/mzaf_4724771841388180061.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/80/37/e7/8037e739-8a0e-87ab-0b6b-ff030d361787/mzaf_4724771841388180061.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Helmets for Hats",
           "duration": "2:39",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/86/09/c1/8609c198-e31d-4522-b664-11365dc6608d/mzaf_2330123187165461051.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/86/09/c1/8609c198-e31d-4522-b664-11365dc6608d/mzaf_2330123187165461051.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 8,
           "title": "Cloud 9",
           "duration": "2:51",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/28/93/13/28931307-f2e5-2027-dc60-fe270793fb24/mzaf_5211183025931213904.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/28/93/13/28931307-f2e5-2027-dc60-fe270793fb24/mzaf_5211183025931213904.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Got it Tucked",
           "duration": "2:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/69/8a/99/698a99ed-faf3-6a0d-fefb-1ac447802bd5/mzaf_11185894257273884160.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/69/8a/99/698a99ed-faf3-6a0d-fefb-1ac447802bd5/mzaf_11185894257273884160.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Rich as Hell",
           "duration": "1:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/56/07/ce/5607cedd-bbdf-3477-54c9-8eef1c5901ac/mzaf_1420752774286623312.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/56/07/ce/5607cedd-bbdf-3477-54c9-8eef1c5901ac/mzaf_1420752774286623312.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "People Under the Stairs",
           "duration": "2:22",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/63/c9/24/63c92441-755e-e948-c317-e115ead98471/mzaf_18173077621944949061.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/63/c9/24/63c92441-755e-e948-c317-e115ead98471/mzaf_18173077621944949061.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "We On Dat",
           "duration": "2:18",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a0/c8/e3/a0c8e327-bf15-91d2-7269-d118d3aa8ca2/mzaf_445542387181967592.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a0/c8/e3/a0c8e327-bf15-91d2-7269-d118d3aa8ca2/mzaf_445542387181967592.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Leave",
           "duration": "1:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b3/b8/8c/b3b88c1e-2b20-d04b-18d9-260749c28f24/mzaf_9948939656159180498.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b3/b8/8c/b3b88c1e-2b20-d04b-18d9-260749c28f24/mzaf_9948939656159180498.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "Free Threat",
           "duration": "2:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/a0/a1/2ba0a19b-437e-beb1-4eb3-698d90e39455/mzaf_4906242078836485270.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/a0/a1/2ba0a19b-437e-beb1-4eb3-698d90e39455/mzaf_4906242078836485270.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "Hubba Bubba Man",
           "duration": "1:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a5/16/58/a51658b0-51b9-6a97-dbbb-a7eff9971d00/mzaf_3176779473979234970.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a5/16/58/a51658b0-51b9-6a97-dbbb-a7eff9971d00/mzaf_3176779473979234970.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "Nother One",
           "duration": "1:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/03/b4/34/03b434cf-b11a-1917-e626-4b6b1e9fba4c/mzaf_3783669054590104086.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/03/b4/34/03b434cf-b11a-1917-e626-4b6b1e9fba4c/mzaf_3783669054590104086.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "Play Ball",
           "duration": "1:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c8/8f/09/c88f09f3-9aba-c8f3-4f3a-711704052b56/mzaf_13975052995193154769.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c8/8f/09/c88f09f3-9aba-c8f3-4f3a-711704052b56/mzaf_13975052995193154769.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 18,
           "title": "Hubba Bubba Man",
           "duration": "1:58",
-          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video221/v4/84/ae/ea/84aeea2f-4870-4762-a735-573aa303bd23/mzvf_1858888127675737992.1920w.h264lc.U.p.m4v"
+          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video221/v4/84/ae/ea/84aeea2f-4870-4762-a735-573aa303bd23/mzvf_1858888127675737992.1920w.h264lc.U.p.m4v",
+          "is_top": false
         },
         {
           "number": 19,
           "title": "Helmets for Hats",
           "duration": "2:36",
-          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video211/v4/69/3a/63/693a6389-c2d3-5932-1814-d5b1e9e249b3/mzvf_2395538049364929326.1920w.h264lc.U.p.m4v"
+          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video211/v4/69/3a/63/693a6389-c2d3-5932-1814-d5b1e9e249b3/mzvf_2395538049364929326.1920w.h264lc.U.p.m4v",
+          "is_top": true
         },
         {
           "number": 20,
           "title": "Rich as Hell",
           "duration": "1:50",
-          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video211/v4/0f/29/8a/0f298a5e-b8cc-1b4a-352b-518fa938e3dd/mzvf_10345422676826258241.1920w.h264lc.U.p.m4v"
+          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video211/v4/0f/29/8a/0f298a5e-b8cc-1b4a-352b-518fa938e3dd/mzvf_10345422676826258241.1920w.h264lc.U.p.m4v",
+          "is_top": false
         },
         {
           "number": 21,
           "title": "Play Ball",
           "duration": "1:50",
-          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video211/v4/fc/a1/02/fca102c3-3c27-9652-57c1-06c4fb69ac46/mzvf_3659694350214327457.1920w.h264lc.U.p.m4v"
+          "preview": "https://video-ssl.itunes.apple.com/itunes-assets/Video211/v4/fc/a1/02/fca102c3-3c27-9652-57c1-06c4fb69ac46/mzvf_3659694350214327457.1920w.h264lc.U.p.m4v",
+          "is_top": false
         }
       ]
     },
@@ -1362,91 +1572,106 @@ const data = {
           "number": 1,
           "title": "Closeline",
           "duration": "2:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b9/34/20/b93420b8-ba3d-42ee-c528-7b709d72b43e/mzaf_9961150234554718542.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b9/34/20/b93420b8-ba3d-42ee-c528-7b709d72b43e/mzaf_9961150234554718542.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Do You Love Me",
           "duration": "4:01",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3b/a2/ac/3ba2aceb-5bc7-3b18-3359-492de624f1a5/mzaf_5959976337248151500.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3b/a2/ac/3ba2aceb-5bc7-3b18-3359-492de624f1a5/mzaf_5959976337248151500.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Choppa Boy",
           "duration": "2:25",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8c/ed/b8/8cedb8bb-756b-8411-a9e1-ed399e838dd9/mzaf_13358891710501740584.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8c/ed/b8/8cedb8bb-756b-8411-a9e1-ed399e838dd9/mzaf_13358891710501740584.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Automatic Part Two (feat. Hunxho)",
           "duration": "2:37",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/55/a5/8a/55a58a92-50a3-cd21-2542-fc068751bdc9/mzaf_6612718608905949320.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/55/a5/8a/55a58a92-50a3-cd21-2542-fc068751bdc9/mzaf_6612718608905949320.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Crazy Ass N***a",
           "duration": "4:01",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/ec/eb/6decebb7-fe52-1291-9894-b93cc26f73fa/mzaf_7859579183816671313.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/ec/eb/6decebb7-fe52-1291-9894-b93cc26f73fa/mzaf_7859579183816671313.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Fruity Pebbles",
           "duration": "2:27",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/32/3d/49/323d491c-6a7f-cff5-afc3-f39c73c0e7f6/mzaf_10427325959703514859.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/32/3d/49/323d491c-6a7f-cff5-afc3-f39c73c0e7f6/mzaf_10427325959703514859.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Alright If I Trick",
           "duration": "3:42",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5d/a9/23/5da92369-63bb-2ccf-7686-8f1779756bc1/mzaf_9615281325610243000.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5d/a9/23/5da92369-63bb-2ccf-7686-8f1779756bc1/mzaf_9615281325610243000.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "24 Rounds",
           "duration": "2:01",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/43/11/1c/43111c51-ebaa-6539-1568-d2a2a1c6a519/mzaf_16784282236071513895.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/43/11/1c/43111c51-ebaa-6539-1568-d2a2a1c6a519/mzaf_16784282236071513895.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "I'm Back",
           "duration": "2:40",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/89/1d/83/891d83de-c35c-5486-a072-6673ad27fae1/mzaf_2267477331047042057.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/89/1d/83/891d83de-c35c-5486-a072-6673ad27fae1/mzaf_2267477331047042057.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Devil Son (Bonus Track)",
           "duration": "1:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ed/d6/41/edd641ec-7987-e771-e68d-8e168b5d99ea/mzaf_9342773190488895574.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ed/d6/41/edd641ec-7987-e771-e68d-8e168b5d99ea/mzaf_9342773190488895574.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Surgery",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fb/57/94/fb579403-594f-6614-5da9-26aba20181f0/mzaf_18261990662727161339.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fb/57/94/fb579403-594f-6614-5da9-26aba20181f0/mzaf_18261990662727161339.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Blew the Funds",
           "duration": "2:20",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e3/cc/9f/e3cc9f4f-13aa-74e0-5bd5-4c4bc03e23c6/mzaf_7177339832283652990.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e3/cc/9f/e3cc9f4f-13aa-74e0-5bd5-4c4bc03e23c6/mzaf_7177339832283652990.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Halloween (feat. RiskTakerLeek)",
           "duration": "2:36",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c7/6d/fa/c76dfa38-dc2e-7bf7-0a48-32bdd461cbe8/mzaf_11868128505807863663.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c7/6d/fa/c76dfa38-dc2e-7bf7-0a48-32bdd461cbe8/mzaf_11868128505807863663.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "Blame On Me",
           "duration": "3:11",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/89/02/b5/8902b533-2096-81a6-dfde-b69b3dbecb61/mzaf_18431311547707459963.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/89/02/b5/8902b533-2096-81a6-dfde-b69b3dbecb61/mzaf_18431311547707459963.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "Picked Off (Bonus Track)",
           "duration": "2:28",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e8/2e/93/e82e93cb-7ec0-ac4e-37b4-a38cd8142634/mzaf_5462764568581718732.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e8/2e/93/e82e93cb-7ec0-ac4e-37b4-a38cd8142634/mzaf_5462764568581718732.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -1460,109 +1685,127 @@ const data = {
           "number": 1,
           "title": "DoorDash (OMG)",
           "duration": "3:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/75/ba/75/75ba7512-270c-df7f-6a37-2956340c5d09/mzaf_7205558402286301993.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/75/ba/75/75ba7512-270c-df7f-6a37-2956340c5d09/mzaf_7205558402286301993.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "The President",
           "duration": "2:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/46/30/ab/4630abb5-cd39-aaa0-d890-85a436ac3a0f/mzaf_5384318034297644576.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/46/30/ab/4630abb5-cd39-aaa0-d890-85a436ac3a0f/mzaf_5384318034297644576.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Takedown",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/72/ee/43/72ee435f-9402-5464-554d-26e359369d15/mzaf_1462329171148584150.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/72/ee/43/72ee435f-9402-5464-554d-26e359369d15/mzaf_1462329171148584150.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 4,
           "title": "Stick Up",
           "duration": "2:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cb/b5/d4/cbb5d438-10f0-8232-685e-7c05e7869bf8/mzaf_17566170073767948586.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cb/b5/d4/cbb5d438-10f0-8232-685e-7c05e7869bf8/mzaf_17566170073767948586.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Melt",
           "duration": "2:59",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d1/43/f6/d143f607-0af5-490c-e300-89b851e3ed23/mzaf_8105070041258563011.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d1/43/f6/d143f607-0af5-490c-e300-89b851e3ed23/mzaf_8105070041258563011.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Dirty Dan",
           "duration": "2:27",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c0/d9/e5/c0d9e532-9f42-8891-d3e0-87e7e428ce43/mzaf_11942013901599621926.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c0/d9/e5/c0d9e532-9f42-8891-d3e0-87e7e428ce43/mzaf_11942013901599621926.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Glizzy On Hip (feat. Toosii)",
           "duration": "3:13",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dc/a3/76/dca376bc-3e08-0743-820f-8d6a264fed31/mzaf_13229551533462288785.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dc/a3/76/dca376bc-3e08-0743-820f-8d6a264fed31/mzaf_13229551533462288785.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Junior",
           "duration": "2:15",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/68/70/31/68703161-2371-b38c-ce15-eb14822372d3/mzaf_11461092648276964947.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/68/70/31/68703161-2371-b38c-ce15-eb14822372d3/mzaf_11461092648276964947.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Thing 1 & Thing 2",
           "duration": "2:00",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f0/17/1e/f0171e5f-3312-4929-f564-96e217ca2a05/mzaf_18046034077009930785.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f0/17/1e/f0171e5f-3312-4929-f564-96e217ca2a05/mzaf_18046034077009930785.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Lunchable",
           "duration": "2:26",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/da/f6/01/daf6019b-19eb-78db-22b7-e52ee39f640d/mzaf_15945838714139546525.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/da/f6/01/daf6019b-19eb-78db-22b7-e52ee39f640d/mzaf_15945838714139546525.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "All Up On Me",
           "duration": "2:22",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/80/67/5c80679f-ef58-9d88-de95-41e548981083/mzaf_7444139071842592998.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/80/67/5c80679f-ef58-9d88-de95-41e548981083/mzaf_7444139071842592998.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Switch Crowd (feat. FattMack)",
           "duration": "2:55",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/52/76/19/5276197c-3d74-9a0c-34f6-f7b77d850344/mzaf_10280839618240879094.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/52/76/19/5276197c-3d74-9a0c-34f6-f7b77d850344/mzaf_10280839618240879094.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Trinidad James",
           "duration": "1:52",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ac/87/e3/ac87e306-2531-8b88-8836-62907da65cbd/mzaf_7741457271775114086.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ac/87/e3/ac87e306-2531-8b88-8836-62907da65cbd/mzaf_7741457271775114086.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "My Ball",
           "duration": "2:29",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8a/b9/c4/8ab9c494-64c4-2c66-67dd-e2241f9a85eb/mzaf_16813617057012862442.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8a/b9/c4/8ab9c494-64c4-2c66-67dd-e2241f9a85eb/mzaf_16813617057012862442.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "Feel Bad (feat. G Herbo)",
           "duration": "2:54",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/34/d7/a134d7b0-cde7-e8dc-e2fb-b5c17440221b/mzaf_12505181504501979984.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a1/34/d7/a134d7b0-cde7-e8dc-e2fb-b5c17440221b/mzaf_12505181504501979984.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "Toy Story",
           "duration": "3:04",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/36/e9/f5/36e9f56e-a6b2-8dee-3433-4cccf4dc1cba/mzaf_6002021647970907555.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/36/e9/f5/36e9f56e-a6b2-8dee-3433-4cccf4dc1cba/mzaf_6002021647970907555.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "Mental Breakdown",
           "duration": "2:09",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ac/94/a8/ac94a82e-65fb-37a8-4ec5-b5a878e42ab6/mzaf_4138876330080381192.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ac/94/a8/ac94a82e-65fb-37a8-4ec5-b5a878e42ab6/mzaf_4138876330080381192.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 18,
           "title": "2 Man With A Frenchie",
           "duration": "2:08",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/78/31/5a/78315a14-cb46-6fad-f490-dc62985bfb42/mzaf_10329512402373095605.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/78/31/5a/78315a14-cb46-6fad-f490-dc62985bfb42/mzaf_10329512402373095605.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     }
@@ -1578,79 +1821,92 @@ const data = {
           "number": 1,
           "title": "Studio Addict",
           "duration": "2:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cd/86/45/cd864529-60cb-987e-ed27-d6263a4844bb/mzaf_10996050840359906798.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cd/86/45/cd864529-60cb-987e-ed27-d6263a4844bb/mzaf_10996050840359906798.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Tokyo",
           "duration": "2:36",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/51/88/0f/51880ffe-1e1b-6cec-b2d2-ad7aab8880e3/mzaf_17281366195611779285.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/51/88/0f/51880ffe-1e1b-6cec-b2d2-ad7aab8880e3/mzaf_17281366195611779285.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "F&N",
           "duration": "2:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/df/46/ad/df46adc4-d406-516c-a1be-e277babaab86/mzaf_6571041201298749609.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/df/46/ad/df46adc4-d406-516c-a1be-e277babaab86/mzaf_6571041201298749609.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "The Truth",
           "duration": "2:35",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dc/f4/62/dcf462e4-c05c-3bed-82c0-9a9e4b8a2b95/mzaf_11143332424396606264.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dc/f4/62/dcf462e4-c05c-3bed-82c0-9a9e4b8a2b95/mzaf_11143332424396606264.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Los Angeles",
           "duration": "3:17",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/c5/6d/31c56d40-6266-66aa-ab2b-adfd756c7519/mzaf_223739984473584833.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/c5/6d/31c56d40-6266-66aa-ab2b-adfd756c7519/mzaf_223739984473584833.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Ye",
           "duration": "2:17",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1c/98/1e/1c981e1c-92b6-5859-d136-3b321173b6ba/mzaf_9651313935701477668.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1c/98/1e/1c981e1c-92b6-5859-d136-3b321173b6ba/mzaf_9651313935701477668.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Interlude",
           "duration": "1:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/26/44/60/2644600f-4dae-854f-80cb-00c1e849f47a/mzaf_13910937501492946649.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/26/44/60/2644600f-4dae-854f-80cb-00c1e849f47a/mzaf_13910937501492946649.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "One Beer",
           "duration": "1:36",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/64/a5/e8/64a5e88f-f7cf-7784-3a2d-17a8905b47b6/mzaf_3972425834502919717.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/64/a5/e8/64a5e88f-f7cf-7784-3a2d-17a8905b47b6/mzaf_3972425834502919717.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Boom Bap",
           "duration": "2:17",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/43/09/5c/43095cc6-9655-6654-6429-e19b8ca84e2f/mzaf_6227044178083139702.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/43/09/5c/43095cc6-9655-6654-6429-e19b8ca84e2f/mzaf_6227044178083139702.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Slide Aht",
           "duration": "1:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/b4/eb/4cb4eb3c-cac4-8af0-f934-f7586d267626/mzaf_17423137815738780639.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/b4/eb/4cb4eb3c-cac4-8af0-f934-f7586d267626/mzaf_17423137815738780639.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Black Truck Talking",
           "duration": "2:33",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/11/c8/cf/11c8cf9e-8949-9d5c-0fd9-bfa8224c7b6e/mzaf_7670165957536486167.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/11/c8/cf/11c8cf9e-8949-9d5c-0fd9-bfa8224c7b6e/mzaf_7670165957536486167.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Love Hurts",
           "duration": "1:57",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9e/09/4a/9e094ac2-fcff-d89f-e28d-69ff5aee90ff/mzaf_15597318118552707937.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9e/09/4a/9e094ac2-fcff-d89f-e28d-69ff5aee90ff/mzaf_15597318118552707937.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Just Landed",
           "duration": "1:53",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7b/8c/c4/7b8cc454-a9c9-b60e-55b5-f52aa91b1b1c/mzaf_11059445791202502877.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7b/8c/c4/7b8cc454-a9c9-b60e-55b5-f52aa91b1b1c/mzaf_11059445791202502877.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -1664,97 +1920,113 @@ const data = {
           "number": 1,
           "title": "Can't Tell Me Nothing",
           "duration": "2:16",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ae/8c/72/ae8c7237-c030-9f02-df11-003c83ff8da6/mzaf_6012551434476414632.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ae/8c/72/ae8c7237-c030-9f02-df11-003c83ff8da6/mzaf_6012551434476414632.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Takin Swag",
           "duration": "2:55",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a6/f2/8d/a6f28dbc-2b23-41cc-9dd9-19d41833f6ee/mzaf_3601231974215066598.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a6/f2/8d/a6f28dbc-2b23-41cc-9dd9-19d41833f6ee/mzaf_3601231974215066598.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "New Means",
           "duration": "2:26",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1b/e9/cb/1be9cb8c-be9d-dbff-12f0-485f7a56a280/mzaf_2302717194127944484.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1b/e9/cb/1be9cb8c-be9d-dbff-12f0-485f7a56a280/mzaf_2302717194127944484.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Co-sign",
           "duration": "2:17",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ee/6a/ef/ee6aefb2-5c87-3b2e-330c-1940ce9771d7/mzaf_1749066132171939720.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ee/6a/ef/ee6aefb2-5c87-3b2e-330c-1940ce9771d7/mzaf_1749066132171939720.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "Valley",
           "duration": "1:49",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/64/a5/c7/64a5c75c-c664-e3fa-7dde-cef8efab37c0/mzaf_9226526648318149866.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/64/a5/c7/64a5c75c-c664-e3fa-7dde-cef8efab37c0/mzaf_9226526648318149866.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Moshpit",
           "duration": "1:36",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cd/37/13/cd371351-3ffc-2d7e-b1d3-40376aa78d9f/mzaf_8205794437112851937.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cd/37/13/cd371351-3ffc-2d7e-b1d3-40376aa78d9f/mzaf_8205794437112851937.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Internet Gangsta",
           "duration": "1:49",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7a/9c/9b/7a9c9b17-2b77-ab97-0ac0-f5179e0ebd94/mzaf_12740165923304138572.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7a/9c/9b/7a9c9b17-2b77-ab97-0ac0-f5179e0ebd94/mzaf_12740165923304138572.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Face",
           "duration": "3:21",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/93/f7/0b/93f70bcb-c455-5e0b-ddb8-a97815e4e08e/mzaf_2063922068722840812.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/93/f7/0b/93f70bcb-c455-5e0b-ddb8-a97815e4e08e/mzaf_2063922068722840812.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Chaos",
           "duration": "3:36",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4b/f1/ef/4bf1ef6e-96cb-0f8e-f1d7-010399f66c45/mzaf_9944874176446672313.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4b/f1/ef/4bf1ef6e-96cb-0f8e-f1d7-010399f66c45/mzaf_9944874176446672313.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Mobb Deep",
           "duration": "1:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8d/1f/c3/8d1fc38f-edcb-9651-3dfb-bdb203345614/mzaf_1538508365165195388.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8d/1f/c3/8d1fc38f-edcb-9651-3dfb-bdb203345614/mzaf_1538508365165195388.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Hurt Sum",
           "duration": "1:39",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/73/00/e1/7300e136-8a69-90f8-bb08-b53ecbee1784/mzaf_11526005585265657666.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/73/00/e1/7300e136-8a69-90f8-bb08-b53ecbee1784/mzaf_11526005585265657666.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "Slatt Gospel",
           "duration": "1:57",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e4/ff/5b/e4ff5b14-22cb-80ec-606b-c10f77869133/mzaf_15808928832859531984.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e4/ff/5b/e4ff5b14-22cb-80ec-606b-c10f77869133/mzaf_15808928832859531984.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "Pretty",
           "duration": "2:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/91/45/6c/91456c05-a73a-1cdc-fa2e-486896e46d2d/mzaf_15148870466954825374.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/91/45/6c/91456c05-a73a-1cdc-fa2e-486896e46d2d/mzaf_15148870466954825374.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "Dbz",
           "duration": "2:41",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a0/f4/1d/a0f41d57-9232-2622-ab02-4b4d65607ab4/mzaf_245773531157623554.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a0/f4/1d/a0f41d57-9232-2622-ab02-4b4d65607ab4/mzaf_245773531157623554.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "So Many Tears",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/78/16/72/78167253-0b26-5eb5-cc52-02257ce18bce/mzaf_1151833160731873924.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/78/16/72/78167253-0b26-5eb5-cc52-02257ce18bce/mzaf_1151833160731873924.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "The End",
           "duration": "4:39",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/10/5e/eb/105eeba8-e988-923b-ba6b-dcf820444540/mzaf_5228719191290423053.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/10/5e/eb/105eeba8-e988-923b-ba6b-dcf820444540/mzaf_5228719191290423053.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -1768,67 +2040,78 @@ const data = {
           "number": 1,
           "title": "Margiela Steppin",
           "duration": "2:20",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/53/f9/40/53f94022-e05a-ef67-0ccb-e4dbbe1241d1/mzaf_6175302974342337974.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/53/f9/40/53f94022-e05a-ef67-0ccb-e4dbbe1241d1/mzaf_6175302974342337974.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Makaveli",
           "duration": "2:44",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/72/b3/0f/72b30fa7-80c3-7c0f-dacf-19b3d80abdc9/mzaf_14303020555178006278.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/72/b3/0f/72b30fa7-80c3-7c0f-dacf-19b3d80abdc9/mzaf_14303020555178006278.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Clout Demons",
           "duration": "2:35",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a3/05/05/a30505ff-8028-e689-b22d-99d48bc40ba8/mzaf_13300172018221856895.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a3/05/05/a30505ff-8028-e689-b22d-99d48bc40ba8/mzaf_13300172018221856895.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "Sp5der",
           "duration": "2:10",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5d/c1/ef/5dc1efb6-49da-372e-190b-be03325f2afa/mzaf_9852532480012915198.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5d/c1/ef/5dc1efb6-49da-372e-190b-be03325f2afa/mzaf_9852532480012915198.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "X and Instagram",
           "duration": "2:12",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/02/61/e7/0261e733-8539-301b-8b3d-9ad4c9e11f9c/mzaf_15907870228557396261.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/02/61/e7/0261e733-8539-301b-8b3d-9ad4c9e11f9c/mzaf_15907870228557396261.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Anti You",
           "duration": "3:02",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/85/f8/93/85f89399-edf0-d482-b7d2-83aab0cbb65a/mzaf_6343304931608674542.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/85/f8/93/85f89399-edf0-d482-b7d2-83aab0cbb65a/mzaf_6343304931608674542.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Mad Rappers",
           "duration": "2:21",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d3/a0/ce/d3a0ce37-7ae6-53fe-cb7b-b1b4e6c6fb22/mzaf_4206945350788029279.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d3/a0/ce/d3a0ce37-7ae6-53fe-cb7b-b1b4e6c6fb22/mzaf_4206945350788029279.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "Hit Em Up",
           "duration": "1:52",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/57/39/52/57395296-71a6-3cff-0f4a-f07bcbd478dd/mzaf_6682280422709948266.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/57/39/52/57395296-71a6-3cff-0f4a-f07bcbd478dd/mzaf_6682280422709948266.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "Beastmode",
           "duration": "3:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/21/50/8d/21508dfa-85d8-650f-6f37-e3e1bbfe8251/mzaf_6409289923627060795.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/21/50/8d/21508dfa-85d8-650f-6f37-e3e1bbfe8251/mzaf_6409289923627060795.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Again",
           "duration": "2:16",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d7/b4/65/d7b465b7-286f-4176-abfd-5b0ad0ca34ff/mzaf_6547431960539925391.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d7/b4/65/d7b465b7-286f-4176-abfd-5b0ad0ca34ff/mzaf_6547431960539925391.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Take Me Down",
           "duration": "2:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cc/b1/9c/ccb19c19-454b-39d8-3e33-d30973fc2e0f/mzaf_18245536946744797600.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cc/b1/9c/ccb19c19-454b-39d8-3e33-d30973fc2e0f/mzaf_18245536946744797600.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     }
@@ -1844,91 +2127,106 @@ const data = {
           "number": 1,
           "title": "7ft opponent",
           "duration": "1:34",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5f/48/71/5f48713b-02bb-28c5-5384-180edd8ce525/mzaf_2792781140354913196.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5f/48/71/5f48713b-02bb-28c5-5384-180edd8ce525/mzaf_2792781140354913196.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "wigan out",
           "duration": "2:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8a/5b/c3/8a5bc332-ecc6-a373-2476-4b6ef09c527c/mzaf_8708032117006615023.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8a/5b/c3/8a5bc332-ecc6-a373-2476-4b6ef09c527c/mzaf_8708032117006615023.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "awsum",
           "duration": "1:29",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/64/69/95/646995ee-75da-0803-c9d7-34b217707601/mzaf_8720988561350666061.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/64/69/95/646995ee-75da-0803-c9d7-34b217707601/mzaf_8720988561350666061.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "promo za",
           "duration": "2:14",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cf/c2/b5/cfc2b5f4-5947-1994-4b2b-874007816dde/mzaf_3796534343543116087.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cf/c2/b5/cfc2b5f4-5947-1994-4b2b-874007816dde/mzaf_3796534343543116087.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "captivity",
           "duration": "1:56",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d5/e9/85/d5e98576-4160-9b42-222d-87468be597e6/mzaf_2370995348128582644.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d5/e9/85/d5e98576-4160-9b42-222d-87468be597e6/mzaf_2370995348128582644.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "evil curse",
           "duration": "1:47",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/39/72/9e/39729eea-07e4-471f-a246-b55dcb8765e0/mzaf_895063457436077416.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/39/72/9e/39729eea-07e4-471f-a246-b55dcb8765e0/mzaf_895063457436077416.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "must run",
           "duration": "1:07",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/74/24/15/742415e4-8875-cf86-3bb6-f11ade4ede13/mzaf_18239644581684642755.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/74/24/15/742415e4-8875-cf86-3bb6-f11ade4ede13/mzaf_18239644581684642755.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "up strike",
           "duration": "1:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f7/41/d0/f741d0e7-e151-dfa4-d124-23e87f0c5525/mzaf_12245064082281447834.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f7/41/d0/f741d0e7-e151-dfa4-d124-23e87f0c5525/mzaf_12245064082281447834.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "mini sto",
           "duration": "1:24",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/45/c3/73/45c373cc-fd51-7b8b-5d5f-05d2c28df5d3/mzaf_10178595018351840337.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/45/c3/73/45c373cc-fd51-7b8b-5d5f-05d2c28df5d3/mzaf_10178595018351840337.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "jinni",
           "duration": "1:15",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/72/4a/db/724adb96-beb5-e4ce-72d1-c4ad88be3304/mzaf_12401863102015295313.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/72/4a/db/724adb96-beb5-e4ce-72d1-c4ad88be3304/mzaf_12401863102015295313.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "injoyable",
           "duration": "1:16",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/67/2e/fa/672efa0c-1e9c-4f03-c39d-c05580080bb4/mzaf_12559226292871511966.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/67/2e/fa/672efa0c-1e9c-4f03-c39d-c05580080bb4/mzaf_12559226292871511966.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "moshpit",
           "duration": "1:04",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d6/38/9f/d6389fb3-1268-87d5-4394-94340da18828/mzaf_14447068232756795884.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d6/38/9f/d6389fb3-1268-87d5-4394-94340da18828/mzaf_14447068232756795884.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "li twan",
           "duration": "2:08",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/26/8e/f2/268ef29d-db1f-9703-ad03-faee54d27c63/mzaf_7037754061317297480.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/26/8e/f2/268ef29d-db1f-9703-ad03-faee54d27c63/mzaf_7037754061317297480.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "lame f**k",
           "duration": "2:19",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/93/ae/5793ae7a-6617-42fd-c17a-2cdd293555c2/mzaf_18159376676191087047.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/93/ae/5793ae7a-6617-42fd-c17a-2cdd293555c2/mzaf_18159376676191087047.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "sheft",
           "duration": "1:06",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e0/1c/07/e01c0785-022e-d598-1435-507d28d2e75f/mzaf_2177950046225013144.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e0/1c/07/e01c0785-022e-d598-1435-507d28d2e75f/mzaf_2177950046225013144.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -1942,109 +2240,127 @@ const data = {
           "number": 1,
           "title": "KEEPIN IT CLOUDY",
           "duration": "2:05",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fc/0f/1a/fc0f1abb-2a81-df2c-2d30-65208f45f85b/mzaf_13440149208405955224.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fc/0f/1a/fc0f1abb-2a81-df2c-2d30-65208f45f85b/mzaf_13440149208405955224.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "DEFAULT WHIP",
           "duration": "2:01",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/73/47/9b/73479b32-cf97-2893-188b-ee9125f6f27e/mzaf_1366901185258903971.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/73/47/9b/73479b32-cf97-2893-188b-ee9125f6f27e/mzaf_1366901185258903971.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "CALYPSO",
           "duration": "1:38",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1b/2f/c0/1b2fc042-8eb7-bc65-16ca-4b45e2b90436/mzaf_4035382971861759982.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1b/2f/c0/1b2fc042-8eb7-bc65-16ca-4b45e2b90436/mzaf_4035382971861759982.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "MILITANT",
           "duration": "2:08",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/f3/51/23f35148-a22e-3da5-2a84-a48f855b95bf/mzaf_9872015744384575064.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/f3/51/23f35148-a22e-3da5-2a84-a48f855b95bf/mzaf_9872015744384575064.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "0436",
           "duration": "2:15",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c2/6f/db/c26fdbc6-0285-a57f-83f7-9c5b3ef99e37/mzaf_693520578055267805.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c2/6f/db/c26fdbc6-0285-a57f-83f7-9c5b3ef99e37/mzaf_693520578055267805.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "MEDICAID",
           "duration": "1:40",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/67/34/04/6734049c-4688-df84-ae22-0030b2daf0d6/mzaf_11609096675969890884.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/67/34/04/6734049c-4688-df84-ae22-0030b2daf0d6/mzaf_11609096675969890884.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "FAST & FURIOUS",
           "duration": "2:23",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3d/5a/ec/3d5aeceb-97fa-366f-562a-543f81357265/mzaf_520619141377906600.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3d/5a/ec/3d5aeceb-97fa-366f-562a-543f81357265/mzaf_520619141377906600.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "LUIGI",
           "duration": "1:37",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/a7/1a/4ca71a03-159c-301e-85aa-d314144685f9/mzaf_8787620237872554849.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/a7/1a/4ca71a03-159c-301e-85aa-d314144685f9/mzaf_8787620237872554849.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "FOREIGN (928)",
           "duration": "1:41",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/43/f8/f4/43f8f497-2dc2-e9ec-6868-6c987d151a35/mzaf_1018914790127733264.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/43/f8/f4/43f8f497-2dc2-e9ec-6868-6c987d151a35/mzaf_1018914790127733264.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "ON GANG",
           "duration": "2:02",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fc/98/50/fc98508a-fbd6-3e01-a301-d4325361bbf8/mzaf_11958774478660468694.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fc/98/50/fc98508a-fbd6-3e01-a301-d4325361bbf8/mzaf_11958774478660468694.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "WTM",
           "duration": "2:20",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4e/b8/2b/4eb82b19-a125-6f7b-dbfd-ca13acac14bb/mzaf_8236747419251850383.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4e/b8/2b/4eb82b19-a125-6f7b-dbfd-ca13acac14bb/mzaf_8236747419251850383.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "WHIP IT",
           "duration": "1:50",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b8/5c/8f/b85c8f4b-39dc-cd11-fecd-df2f381cb950/mzaf_10187208980611261733.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b8/5c/8f/b85c8f4b-39dc-cd11-fecd-df2f381cb950/mzaf_10187208980611261733.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "GREENED OUT",
           "duration": "2:14",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/72/6e/1f/726e1fa3-59b4-3755-f8ee-8896ec2dd63d/mzaf_14839077177802394745.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/72/6e/1f/726e1fa3-59b4-3755-f8ee-8896ec2dd63d/mzaf_14839077177802394745.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 14,
           "title": "METEOR",
           "duration": "2:19",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e1/eb/51/e1eb51ab-b9ba-e246-2193-5a5054551ba8/mzaf_9935165004610587010.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e1/eb/51/e1eb51ab-b9ba-e246-2193-5a5054551ba8/mzaf_9935165004610587010.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 15,
           "title": "LOVELESS",
           "duration": "2:18",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/01/88/95/0188959c-2aca-377d-5c47-77533a414981/mzaf_9353615094455339376.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/01/88/95/0188959c-2aca-377d-5c47-77533a414981/mzaf_9353615094455339376.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 16,
           "title": "SWXCHNUP",
           "duration": "2:10",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ce/02/db/ce02db21-7331-8cec-aae6-40182e71b8b2/mzaf_3073654493378403601.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ce/02/db/ce02db21-7331-8cec-aae6-40182e71b8b2/mzaf_3073654493378403601.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 17,
           "title": "HITONE",
           "duration": "1:40",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ba/65/69/ba656919-d607-c952-c8ec-a18ce8bd7ed9/mzaf_12936442742418968166.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ba/65/69/ba656919-d607-c952-c8ec-a18ce8bd7ed9/mzaf_12936442742418968166.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 18,
           "title": "REWIND",
           "duration": "2:03",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e7/61/6e/e7616e80-9509-0d33-eeed-2ed2a6d50614/mzaf_3572395081949763093.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e7/61/6e/e7616e80-9509-0d33-eeed-2ed2a6d50614/mzaf_3572395081949763093.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     },
@@ -2058,79 +2374,92 @@ const data = {
           "number": 1,
           "title": "Pro mag",
           "duration": "2:38",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7e/54/62/7e546289-fab1-58b8-69eb-3693acd316bf/mzaf_13011128600538127801.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7e/54/62/7e546289-fab1-58b8-69eb-3693acd316bf/mzaf_13011128600538127801.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 2,
           "title": "Maniac",
           "duration": "1:55",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/29/97/02/299702fc-5502-d144-94e4-bba7b05fb8cc/mzaf_12899205916565443402.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/29/97/02/299702fc-5502-d144-94e4-bba7b05fb8cc/mzaf_12899205916565443402.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 3,
           "title": "Fart 808",
           "duration": "1:51",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/2d/a8/ca2da843-cd25-9680-8728-6e5fe34ff0ae/mzaf_182944866896493237.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/2d/a8/ca2da843-cd25-9680-8728-6e5fe34ff0ae/mzaf_182944866896493237.plus.aac.p.m4a",
+          "is_top": true
         },
         {
           "number": 4,
           "title": "boxhed",
           "duration": "2:04",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a0/70/56/a070567c-a0ec-f487-9f09-e2b3a44da00b/mzaf_5536935821694383134.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a0/70/56/a070567c-a0ec-f487-9f09-e2b3a44da00b/mzaf_5536935821694383134.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 5,
           "title": "MIDDLE OF CAR",
           "duration": "2:30",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8e/80/58/8e805848-51d5-3ca1-4628-5fe5fb9a1d50/mzaf_3853051472250546196.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8e/80/58/8e805848-51d5-3ca1-4628-5fe5fb9a1d50/mzaf_3853051472250546196.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 6,
           "title": "Demonz",
           "duration": "2:04",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/81/c2/bc/81c2bc40-4d9e-f76c-5a62-59c584269f76/mzaf_800374323322096427.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/81/c2/bc/81c2bc40-4d9e-f76c-5a62-59c584269f76/mzaf_800374323322096427.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 7,
           "title": "Shoutout dat boy",
           "duration": "2:22",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fe/9e/b1/fe9eb1ad-9e40-bcbd-8cad-5e6b0b3773d2/mzaf_16047621350509530946.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fe/9e/b1/fe9eb1ad-9e40-bcbd-8cad-5e6b0b3773d2/mzaf_16047621350509530946.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 8,
           "title": "MAYHEM",
           "duration": "2:05",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/20/bc/3f/20bc3fb3-3b35-46c5-c24e-bf74ae69126a/mzaf_5741970707195607126.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/20/bc/3f/20bc3fb3-3b35-46c5-c24e-bf74ae69126a/mzaf_5741970707195607126.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 9,
           "title": "1030",
           "duration": "2:02",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d1/94/22/d19422ae-a63f-5700-3529-f56a06e071ac/mzaf_17638567092810110067.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d1/94/22/d19422ae-a63f-5700-3529-f56a06e071ac/mzaf_17638567092810110067.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 10,
           "title": "Protect da brand",
           "duration": "2:26",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bb/0e/7e/bb0e7ef6-e359-8f13-a798-079ceace9283/mzaf_2789226573375481640.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bb/0e/7e/bb0e7ef6-e359-8f13-a798-079ceace9283/mzaf_2789226573375481640.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 11,
           "title": "Pints",
           "duration": "1:48",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/98/db/3e/98db3e1b-9964-8343-024c-bdb85926adb6/mzaf_7425100639711162337.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/98/db/3e/98db3e1b-9964-8343-024c-bdb85926adb6/mzaf_7425100639711162337.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 12,
           "title": "OXY",
           "duration": "2:45",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2d/8c/d4/2d8cd47b-e103-195c-e8a3-1bd0b9243e59/mzaf_1370001507121586604.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2d/8c/d4/2d8cd47b-e103-195c-e8a3-1bd0b9243e59/mzaf_1370001507121586604.plus.aac.p.m4a",
+          "is_top": false
         },
         {
           "number": 13,
           "title": "556",
           "duration": "2:46",
-          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9b/93/c2/9b93c258-e946-4edc-343b-6c8d5f2aaf08/mzaf_3775543053443148693.plus.aac.p.m4a"
+          "preview": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9b/93/c2/9b93c258-e946-4edc-343b-6c8d5f2aaf08/mzaf_3775543053443148693.plus.aac.p.m4a",
+          "is_top": false
         }
       ]
     }
@@ -2145,6 +2474,33 @@ const artistName = document.getElementById("artistName");
 const releaseYear = document.getElementById("releaseYear");
 const trackCount = document.getElementById("trackCount");
 const trackList = document.getElementById("trackList");
+const globalAudio = document.getElementById("globalAudio");
+const playerBanner = document.getElementById("playerBanner");
+const playerStatus = document.getElementById("playerStatus");
+const bannerStopBtn = document.getElementById("bannerStopBtn");
+
+let activeTrackBtn = null;
+let currentPreviewUrl = null;
+
+bannerStopBtn.addEventListener("click", () => {
+  globalAudio.pause();
+  globalAudio.currentTime = 0;
+  playerBanner.style.display = "none";
+  if (activeTrackBtn) {
+    activeTrackBtn.textContent = "▶";
+    activeTrackBtn.style.backgroundColor = "#7c3aed";
+    activeTrackBtn = null;
+  }
+});
+
+globalAudio.addEventListener("ended", () => {
+  playerBanner.style.display = "none";
+  if (activeTrackBtn) {
+    activeTrackBtn.textContent = "▶";
+    activeTrackBtn.style.backgroundColor = "#7c3aed";
+    activeTrackBtn = null;
+  }
+});
 
 // Populate artists
 Object.keys(data).forEach(artist => {
@@ -2181,6 +2537,12 @@ function loadAlbumDetails() {
   releaseYear.textContent = "Released: " + album.releaseYear;
   trackCount.textContent = album.tracksCount + " Tracks";
 
+  // Stop any playing audio on album change
+  globalAudio.pause();
+  playerBanner.style.display = "none";
+  activeTrackBtn = null;
+  currentPreviewUrl = null;
+
   trackList.innerHTML = "";
   album.tracks.forEach(track => {
     const row = document.createElement("div");
@@ -2189,10 +2551,10 @@ function loadAlbumDetails() {
     row.onmouseout = () => row.style.backgroundColor = "transparent";
 
     const left = document.createElement("div");
-    left.style.cssText = "display: flex; align-items: center; gap: 12px; overflow: hidden;";
+    left.style.cssText = "display: flex; align-items: center; gap: 10px; overflow: hidden;";
 
     const num = document.createElement("span");
-    num.style.cssText = "font-weight: 700; color: #9ca3af; width: 24px; text-align: right; flex-shrink: 0;";
+    num.style.cssText = "font-weight: 700; color: #9ca3af; width: 22px; text-align: right; flex-shrink: 0;";
     num.textContent = track.number;
 
     const title = document.createElement("span");
@@ -2202,12 +2564,56 @@ function loadAlbumDetails() {
     left.appendChild(num);
     left.appendChild(title);
 
+    if (track.is_top) {
+      const badge = document.createElement("span");
+      badge.style.cssText = "background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 9999px; flex-shrink: 0;";
+      badge.textContent = "Top Track";
+      left.appendChild(badge);
+    }
+
+    const right = document.createElement("div");
+    right.style.cssText = "display: flex; align-items: center; gap: 10px; flex-shrink: 0;";
+
     const dur = document.createElement("span");
-    dur.style.cssText = "color: #6b7280; font-family: monospace; font-size: 0.9rem; flex-shrink: 0; margin-left: 16px;";
+    dur.style.cssText = "color: #6b7280; font-family: monospace; font-size: 0.9rem;";
     dur.textContent = track.duration;
+    right.appendChild(dur);
+
+    if (track.is_top && track.preview) {
+      const playBtn = document.createElement("button");
+      playBtn.style.cssText = "background: #7c3aed; color: #ffffff; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;";
+      playBtn.textContent = "▶";
+      playBtn.title = "Play 30s audio clip";
+
+      playBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (currentPreviewUrl === track.preview && !globalAudio.paused) {
+          globalAudio.pause();
+          playBtn.textContent = "▶";
+          playBtn.style.backgroundColor = "#7c3aed";
+          playerBanner.style.display = "none";
+          activeTrackBtn = null;
+        } else {
+          if (activeTrackBtn) {
+            activeTrackBtn.textContent = "▶";
+            activeTrackBtn.style.backgroundColor = "#7c3aed";
+          }
+          globalAudio.src = track.preview;
+          globalAudio.play();
+          currentPreviewUrl = track.preview;
+          activeTrackBtn = playBtn;
+          playBtn.textContent = "⏸";
+          playBtn.style.backgroundColor = "#10b981";
+          playerStatus.textContent = "Playing Clip: " + track.title + " (30s Preview)";
+          playerBanner.style.display = "flex";
+        }
+      });
+
+      right.appendChild(playBtn);
+    }
 
     row.appendChild(left);
-    row.appendChild(dur);
+    row.appendChild(right);
     trackList.appendChild(row);
   });
 }
